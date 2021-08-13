@@ -1,36 +1,36 @@
 import pytest
 
-from context import pwr_tests
+import src.pwr_tests as pwr_tests
 
 
 class Test_2p:
 
     @staticmethod
-    def test_2p_noNone():
+    def test_2p_noNone() -> None:
         with pytest.raises(ValueError, match="One of h, n, sig_level or power must be None"):
             pwr_tests.pwr_2p_test(1, 1, 1, 1)
 
     @staticmethod
-    def test_2p_multipleNone():
+    def test_2p_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of h, n, sig_level or power may be None"):
             pwr_tests.pwr_2p_test(None, 1, None, 1)
 
     @staticmethod
-    def test_2p_sigLevel():
+    def test_2p_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_2p_test(1, 1, 1.5, None)
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_2p_test(1, 1, -1, None)
 
     @staticmethod
-    def test_2p_power():
+    def test_2p_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_2p_test(None, 1, 0.05, 1.2)
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_2p_test(None, 1, 0.05, -0.5)
 
     @staticmethod
-    def test_2p_results():
+    def test_2p_results() -> None:
         p_results = pwr_tests.pwr_2p_test(h=0.3, n=200, sig_level=0.05, alternative='greater')
         # pwr.2p.test(h=0.3,n=200, sig.level=0.05, alternative="greater")
         #
@@ -95,31 +95,31 @@ class Test_2p:
 class Test_2p2n:
 
     @staticmethod
-    def test_2p2n_noNone():
+    def test_2p2n_noNone() -> None:
         with pytest.raises(ValueError, match="One of h, n1, n2, sig_level or power must be None"):
             pwr_tests.pwr_2p2n_test(1, 2, 2, 1, 1)
 
     @staticmethod
-    def test_2p2n_multipleNone():
+    def test_2p2n_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of h, n1, n2, sig_level or power may be None"):
             pwr_tests.pwr_2p2n_test(None, 2, None, 1, 1)
 
     @staticmethod
-    def test_2p2n_sigLevel():
+    def test_2p2n_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_2p2n_test(1, 2, 2, 1.5, None)
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_2p2n_test(1, 2, 2, -1, None)
 
     @staticmethod
-    def test_2p2n_power():
+    def test_2p2n_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_2p2n_test(None, 2, 2, 0.05, 1.2)
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_2p2n_test(None, 2, 2, 0.05, -0.5)
 
     @staticmethod
-    def test_2p2n_result():
+    def test_2p2n_result() -> None:
         p_results = pwr_tests.pwr_2p2n_test(h=0.30, n1=80, n2=245, sig_level=0.05, alternative="greater")
         # pwr.2p2n.test(h=0.30,n1=80,n2=245,sig.level=0.05,alternative="greater")
         #
@@ -203,46 +203,46 @@ class Test_2p2n:
 
 class Test_Anova:
     @staticmethod
-    def test_anova_noNone():
+    def test_anova_noNone() -> None:
         with pytest.raises(ValueError, match="One of k, n, f, sig_level or power must be None"):
             pwr_tests.pwr_anova_test(1, 2, 2, 0.05, 0.8)
 
     @staticmethod
-    def test_anova_multipleNone():
+    def test_anova_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of k, n, f, sig_level or power may be None"):
             pwr_tests.pwr_anova_test(None, 2, None, 0.05, 0.8)
 
     @staticmethod
-    def test_anova_sigLevel():
+    def test_anova_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_anova_test(2, 2, 2, 1.5, None)
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_anova_test(2, 2, 2, -1, None)
 
     @staticmethod
-    def test_anova_f():
+    def test_anova_f() -> None:
         with pytest.raises(ValueError, match="f must be positive"):
             pwr_tests.pwr_anova_test(2, 2, -0.5, 0.5, None)
 
     @staticmethod
-    def test_anova_k():
+    def test_anova_k() -> None:
         with pytest.raises(ValueError, match="Number of groups must be at least 2"):
             pwr_tests.pwr_anova_test(1, 2, 3, None, 0.8)
 
     @staticmethod
-    def test_anova_n():
+    def test_anova_n() -> None:
         with pytest.raises(ValueError, match="Number of observations must be at least 2"):
             pwr_tests.pwr_anova_test(2, 1, None, 0.05, 0.9)
 
     @staticmethod
-    def test_anova_power():
+    def test_anova_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_anova_test(None, 2, 2, 0.05, 1.2)
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_anova_test(None, 2, 2, 0.05, -0.5)
 
     @staticmethod
-    def test_anova_results():
+    def test_anova_results() -> None:
         p_results = pwr_tests.pwr_anova_test(f=0.28, k=4, n=20, sig_level=0.05)
         # pwr.anova.test(f=0.28,k=4,n=20,sig.level=0.05)
         #
@@ -321,41 +321,41 @@ class Test_Anova:
 
 class Test_Chisq:
     @staticmethod
-    def test_chisq_noNone():
+    def test_chisq_noNone() -> None:
         with pytest.raises(ValueError, match="One of w, n, sig_level or power must be None"):
             pwr_tests.pwr_chisq_test(1, 2, 2, 0.05, 0.8)
 
     @staticmethod
-    def test_chisq_multipleNone():
+    def test_chisq_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of w, n, sig_level or power may be None"):
             pwr_tests.pwr_chisq_test(None, None, 2, 0.05, 0.8)
 
     @staticmethod
-    def test_chisq_sigLevel():
+    def test_chisq_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_chisq_test(2, 2, 2, 1.5, None)
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_chisq_test(2, 2, 2, -1, None)
 
     @staticmethod
-    def test_chisq_w():
+    def test_chisq_w() -> None:
         with pytest.raises(ValueError, match="w must be positive"):
             pwr_tests.pwr_chisq_test(-1, 2, 2, 0.5, None)
 
     @staticmethod
-    def test_chisq_n():
+    def test_chisq_n() -> None:
         with pytest.raises(ValueError, match="Number of observations must be at least 1"):
             pwr_tests.pwr_chisq_test(0.3, 0, 3, None, 0.8)
 
     @staticmethod
-    def test_chisq_power():
+    def test_chisq_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_chisq_test(None, 2, 2, 0.05, 1.2)
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_chisq_test(None, 2, 2, 0.05, -0.5)
 
     @staticmethod
-    def test_chisq_results():
+    def test_chisq_results() -> None:
         p_results = pwr_tests.pwr_chisq_test(w=0.289, df=3, n=100, sig_level=0.05)
         # pwr.chisq.test(w=0.289,df=(4-1),N=100,sig.level=0.05)
         #
@@ -419,46 +419,46 @@ class Test_Chisq:
 
 class Test_f2:
     @staticmethod
-    def test_f2_noNone():
+    def test_f2_noNone() -> None:
         with pytest.raises(ValueError, match="One of u, v, f2, sig_level or power must be None"):
             pwr_tests.pwr_f2_test(1, 2, 2, 0.05, 0.8)
 
     @staticmethod
-    def test_f2_multipleNone():
+    def test_f2_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of u, v, f2, sig_level or power may be None"):
             pwr_tests.pwr_f2_test(None, None, 2, 0.05, 0.8)
 
     @staticmethod
-    def test_f2_sigLevel():
+    def test_f2_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_f2_test(2, 2, 2, 1.5, None)
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_f2_test(2, 2, 2, -1, None)
 
     @staticmethod
-    def test_f2_u():
+    def test_f2_u() -> None:
         with pytest.raises(ValueError, match="Degrees of freedom u for numerator must be at least 1"):
             pwr_tests.pwr_f2_test(0, 2, 2, 0.5, None)
 
     @staticmethod
-    def test_f2_v():
+    def test_f2_v() -> None:
         with pytest.raises(ValueError, match="Degrees of freedom v for denominator must be at least 1"):
             pwr_tests.pwr_f2_test(2, 0, 3, None, 0.8)
 
     @staticmethod
-    def test_f2_f2():
+    def test_f2_f2() -> None:
         with pytest.raises(ValueError, match="f2 must be positive"):
             pwr_tests.pwr_f2_test(2, None, -2, 0.05, 0.8)
 
     @staticmethod
-    def test_f2_power():
+    def test_f2_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_f2_test(None, 2, 2, 0.05, 1.2)
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_f2_test(None, 2, 2, 0.05, -0.5)
 
     @staticmethod
-    def test_f2_results():
+    def test_f2_results() -> None:
         p_result = pwr_tests.pwr_f2_test(u=5, v=89, f2=0.1/(1-0.1), sig_level=0.05)
         # pwr.f2.test(u=5,v=89,f2=0.1/(1-0.1),sig.level=0.05)
         #
@@ -527,36 +527,36 @@ class Test_f2:
 
 class Test_Norm:
     @staticmethod
-    def test_norm_noNone():
+    def test_norm_noNone() -> None:
         with pytest.raises(ValueError, match="One of d, n, sig_level or power must be None"):
             pwr_tests.pwr_norm_test(1, 1, 1, 1, 'two-sided')
 
     @staticmethod
-    def test_norm_multipleNone():
+    def test_norm_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of d, n, sig_level or power may be None"):
             pwr_tests.pwr_norm_test(None, None, 2, 0.05, 'less')
 
     @staticmethod
-    def test_norm_sigLevel():
+    def test_norm_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_norm_test(2, 2, 1.5, None, 'two-sided')
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_norm_test(2, None, -1, 0.5, 'greater')
 
     @staticmethod
-    def test_norm_n():
+    def test_norm_n() -> None:
         with pytest.raises(ValueError, match="Number of observations in each group must be at least 1"):
             pwr_tests.pwr_norm_test(None, 0, 0.8, 0.5, 'less')
 
     @staticmethod
-    def test_f2_power():
+    def test_f2_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_norm_test(None, 2, 0.05, 1.2, 'greater')
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_norm_test(None, 2, 0.05, -0.5, 'two-sided')
 
     @staticmethod
-    def test_norm_results():
+    def test_norm_results() -> None:
         p_results = pwr_tests.pwr_norm_test(d=1/3, n=20, sig_level=0.05, alternative='greater')
         # pwr.norm.test(d=d,n=20,sig.level=0.05,alternative="greater")
         #
@@ -612,36 +612,36 @@ class Test_Norm:
 
 class Test_P:
     @staticmethod
-    def test_p_noNone():
+    def test_p_noNone() -> None:
         with pytest.raises(ValueError, match="One of h, n, sig_level or power must be None"):
             pwr_tests.pwr_p_test(1, 1, 1, 1, 'two-sided')
 
     @staticmethod
-    def test_p_multipleNone():
+    def test_p_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of h, n, sig_level or power may be None"):
             pwr_tests.pwr_p_test(None, None, 2, 0.05, 'less')
 
     @staticmethod
-    def test_p_sigLevel():
+    def test_p_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_p_test(2, 2, 1.5, None, 'two-sided')
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_p_test(2, None, -1, 0.5, 'greater')
 
     @staticmethod
-    def test_p_n():
+    def test_p_n() -> None:
         with pytest.raises(ValueError, match="Number of observations in each group must be at least 1"):
             pwr_tests.pwr_p_test(None, 0, 0.8, 0.5, 'less')
 
     @staticmethod
-    def test_p_power():
+    def test_p_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_p_test(None, 2, 0.05, 1.2, 'greater')
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_p_test(None, 2, 0.05, -0.5, 'two-sided')
 
     @staticmethod
-    def test_p_result():
+    def test_p_result() -> None:
         p_result = pwr_tests.pwr_p_test(h=0.2013579, n=60, sig_level=0.05, alternative='two-sided')
         # pwr.p.test(h=h,n=60,sig.level=0.05,alternative="two.sided")
         #
@@ -697,36 +697,36 @@ class Test_P:
 
 class Test_R:
     @staticmethod
-    def test_r_noNone():
+    def test_r_noNone() -> None:
         with pytest.raises(ValueError, match="One of r, n, sig_level or power must be None"):
             pwr_tests.pwr_r_test(1, 1, 1, 1, 'two-sided')
 
     @staticmethod
-    def test_r_multipleNone():
+    def test_r_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of r, n, sig_level or power may be None"):
             pwr_tests.pwr_r_test(None, None, 2, 0.05, 'less')
 
     @staticmethod
-    def test_r_sigLevel():
+    def test_r_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_r_test(4, 0.5, 1.5, None, 'two-sided')
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_r_test(4, None, -1, 0.5, 'greater')
 
     @staticmethod
-    def test_r_n():
+    def test_r_n() -> None:
         with pytest.raises(ValueError, match="Number of observations must be at least 4"):
             pwr_tests.pwr_r_test(3, None, 0.8, 0.5, 'less')
 
     @staticmethod
-    def test_r_power():
+    def test_r_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_r_test(None, 0.5, 0.05, 1.2, 'greater')
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_r_test(None, 0.5, 0.05, -0.5, 'two-sided')
 
     @staticmethod
-    def test_r_result():
+    def test_r_result() -> None:
         p_result = pwr_tests.pwr_r_test(r=0.3, n=50, sig_level=0.05, alternative="greater")
         # pwr.r.test(r=0.3,n=50,sig.level=0.05,alternative="greater")
         #
@@ -782,36 +782,36 @@ class Test_R:
 
 class Test_T:
     @staticmethod
-    def test_t_noNone():
+    def test_t_noNone() -> None:
         with pytest.raises(ValueError, match="One of n, d, sig_level or power must be None"):
             pwr_tests.pwr_t_test(1, 1, 1, 1, 'paired', 'two-sided')
 
     @staticmethod
-    def test_t_multipleNone():
+    def test_t_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of n, d, sig_level or power may be None"):
             pwr_tests.pwr_t_test(None, None, 2, 0.05, 'one', 'less')
 
     @staticmethod
-    def test_t_sigLevel():
+    def test_t_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_t_test(4, 0.5, 1.5, None, 'two', 'two-sided')
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_t_test(4, None, -1, 0.5, 'paired', 'greater')
 
     @staticmethod
-    def test_t_n():
+    def test_t_n() -> None:
         with pytest.raises(ValueError, match="Number of observations must be at least 2"):
             pwr_tests.pwr_t_test(1, None, 0.8, 0.5, 'paired', 'less')
 
     @staticmethod
-    def test_t_power():
+    def test_t_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_t_test(None, 0.5, 0.05, 1.2, 'one', 'greater')
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_t_test(None, 0.5, 0.05, -0.5, 'two', 'two-sided')
 
     @staticmethod
-    def test_t_results():
+    def test_t_results() -> None:
         p_results = pwr_tests.pwr_t_test(d=0.2, n=60, sig_level=0.10, type="one-sample", alternative="two-sided")
         # pwr.t.test(d=0.2,n=60,sig.level=0.10,type="one.sample",alternative="two.sided")
         #
@@ -873,41 +873,41 @@ class Test_T:
 
 class Test_T2N:
     @staticmethod
-    def test_t2n_noNone():
+    def test_t2n_noNone() -> None:
         with pytest.raises(ValueError, match="One of n1, n2, d sig_level or power must be None"):
             pwr_tests.pwr_t2n_test(10, 5, 0.5, 0.05, 0.8, 'two-sided')
 
     @staticmethod
-    def test_t2n_multipleNone():
+    def test_t2n_multipleNone() -> None:
         with pytest.raises(ValueError, match="Only one of n1, n2, d, sig_level or power may be None"):
             pwr_tests.pwr_t2n_test(None, None, 0.3, 0.05, 0.9, 'less')
 
     @staticmethod
-    def test_t2n_sigLevel():
+    def test_t2n_sigLevel() -> None:
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_t2n_test(4, 5, 0.5, 1.5, None, 'two-sided')
         with pytest.raises(ValueError, match="sig_level must be between 0 and 1"):
             pwr_tests.pwr_t2n_test(4, 7, None, -1, 0.5, 'greater')
 
     @staticmethod
-    def test_t2n_n1():
+    def test_t2n_n1() -> None:
         with pytest.raises(ValueError, match="Number of observations in the first group must be at least 2"):
-            pwr_tests.pwr_t2n_test(1, None, 0.8, 0.5, 'paired', 'less')
+            pwr_tests.pwr_t2n_test(1, None, 0.8, 0.5, 0.8, 'less')
 
     @staticmethod
-    def test_t2n_n2():
+    def test_t2n_n2() -> None:
         with pytest.raises(ValueError, match="Number of observations in the second group must be at least 2"):
-            pwr_tests.pwr_t2n_test(None, 1, 0.8, 0.5, 'paired', 'less')
+            pwr_tests.pwr_t2n_test(None, 1, 0.8, 0.5, 0.8, 'less')
 
     @staticmethod
-    def test_t2n_power():
+    def test_t2n_power() -> None:
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_t2n_test(None, 10, 0.5, 0.05, 1.2, 'greater')
         with pytest.raises(ValueError, match="power must be between 0 and 1"):
             pwr_tests.pwr_t2n_test(None, 15, 0.5, 0.05, -0.5, 'two-sided')
 
     @staticmethod
-    def test_t2n_results():
+    def test_t2n_results() -> None:
         p_results = pwr_tests.pwr_t2n_test(d=0.6, n1=90, n2=60, sig_level=0.05, alternative="greater")
         # pwr.t2n.test(d=0.6,n1=90,n2=60,alternative="greater")
         #
