@@ -1,6 +1,7 @@
 import abc
 
 from math import sqrt, atanh
+from typing import Optional, Dict
 
 import numpy as np
 
@@ -9,7 +10,14 @@ from scipy.optimize import brentq, bisect
 
 
 class pwr_1n(abc.ABC):
-    def __init__(self, effect_size, n, sig_level, power, alternative):
+    def __init__(
+        self,
+        effect_size: Optional[float],
+        n: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Abstract class for any test that involves one combined sample size
 
         Parameters
@@ -21,7 +29,7 @@ class pwr_1n(abc.ABC):
         sig_level: float
             Significance level (Type I error probability). Must be between 0 and 1
         power: float
-            Power of test (1 minus Type II error probability). Must be betwen 0 and 1
+            Power of test (1 minus Type II error probability). Must be between 0 and 1
         alternative: {'two-sided', 'greater', 'less'}
             A character string specifying the alternative hypothesis
         """
@@ -31,24 +39,25 @@ class pwr_1n(abc.ABC):
         self.power = power
         self.alternative = alternative.casefold()
         self.method = "Difference of proportion power calculation for binomial distribution (arcsine transformation)"
+        self.note = "Same sample sizes"
 
     @abc.abstractmethod
-    def _get_power(self):
+    def _get_power(self) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_effect_size(self, effect_size):
+    def _get_effect_size(self, effect_size) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_n(self, n):
+    def _get_n(self, n) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level) -> None:
         pass
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
@@ -62,19 +71,37 @@ class pwr_1n(abc.ABC):
             self.n = np.ceil(brentq(self._get_n, 2 + 1e-10, 1e09))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
-        return {
-            "effect_size": self.effect_size,
-            "n": self.n,
-            "sig_level": self.sig_level,
-            "power": self.power,
-            "alternative": self.alternative,
-            "method": self.method,
-            "note": "Same sample sizes",
-        }
+        if self.note is not None:
+            return {
+                "effect_size": self.effect_size,
+                "n": self.n,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": self.method,
+                "note": self.note,
+            }
+        else:
+            return {
+                "effect_size": self.effect_size,
+                "n": self.n,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": self.method
+            }
 
 
 class pwr_2n(abc.ABC):
-    def __init__(self, effect_size, n1, n2, sig_level, power, alternative):
+    def __init__(
+        self,
+        effect_size: Optional[float],
+        n1: Optional[int],
+        n2: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Abstract class for any test that involves two different sample sizes
 
         Parameters
@@ -99,28 +126,29 @@ class pwr_2n(abc.ABC):
         self.power = power
         self.alternative = alternative.casefold()
         self.method = "Difference of proportion power calculation for binomial distribution (arcsine transformation)"
+        self.note = "Different sample sizes"
 
     @abc.abstractmethod
-    def _get_power(self):
+    def _get_power(self) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_effect_size(self, effect_size):
+    def _get_effect_size(self, effect_size: float) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_n1(self, n1):
+    def _get_n1(self, n1: int) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_n2(self, n2):
+    def _get_n2(self, n2: int) -> None:
         pass
 
     @abc.abstractmethod
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> None:
         pass
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
@@ -136,20 +164,38 @@ class pwr_2n(abc.ABC):
             self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 1e09))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
-        return {
-            "effect_size": self.effect_size,
-            "n1": self.n1,
-            "n2": self.n2,
-            "sig_level": self.sig_level,
-            "power": self.power,
-            "alternative": self.alternative,
-            "method": self.method,
-            "note": "Different sample sizes",
-        }
+        if self.note is not None:
+            return {
+                "effect_size": self.effect_size,
+                "n1": self.n1,
+                "n2": self.n2,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": self.method,
+                "note": "Different sample sizes",
+            }
+        else:
+            return {
+                "effect_size": self.effect_size,
+                "n1": self.n1,
+                "n2": self.n2,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": self.method
+            }
 
 
 class pwr_2p(pwr_1n):
-    def __init(self, h, n, sig_level, power, alternative):
+    def __init(
+        self,
+        h: Optional[float],
+        n: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling a test with two proportions but the same sample size
 
         Parameters
@@ -167,7 +213,7 @@ class pwr_2p(pwr_1n):
         """
         super().__init__(h, n, sig_level, power, alternative)
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         if self.alternative == "two-sided":
             power = norm.sf(
                 norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n / 2)
@@ -184,7 +230,7 @@ class pwr_2p(pwr_1n):
             )
         return power
 
-    def _get_effect_size(self, h):
+    def _get_effect_size(self, h: float) -> float:
         if self.alternative == "two-sided":
             h = (
                 norm.sf(norm.isf(self.sig_level / 2) - h * sqrt(self.n / 2))
@@ -197,7 +243,7 @@ class pwr_2p(pwr_1n):
             h = norm.cdf(norm.ppf(self.sig_level) - h * sqrt(self.n / 2)) - self.power
         return h
 
-    def _get_n(self, n):
+    def _get_n(self, n: int) -> float:
         if self.alternative == "two-sided":
             n = (
                 norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(n / 2))
@@ -218,7 +264,7 @@ class pwr_2p(pwr_1n):
             )
         return n
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         if self.alternative == "two-sided":
             sig_level = (
                 norm.sf(norm.isf(sig_level / 2) - self.effect_size * sqrt(self.n / 2))
@@ -240,7 +286,15 @@ class pwr_2p(pwr_1n):
 
 
 class pwr_2p2n(pwr_2n):
-    def __init(self, h, n1, n2, sig_level, power, alternative):
+    def __init(
+        self,
+        h: Optional[float],
+        n1: Optional[int],
+        n2: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling a test with two proportions and two different sample sizes
 
         Parameters
@@ -260,7 +314,7 @@ class pwr_2p2n(pwr_2n):
         """
         super().__init__(h, n1, n2, sig_level, power, alternative)
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         if self.alternative == "two-sided":
             power = norm.sf(
                 norm.isf(self.sig_level / 2)
@@ -281,7 +335,7 @@ class pwr_2p2n(pwr_2n):
             )
         return power
 
-    def _get_effect_size(self, h):
+    def _get_effect_size(self, h: float) -> float:
         if self.alternative == "two-sided":
             h = (
                 norm.sf(
@@ -312,7 +366,7 @@ class pwr_2p2n(pwr_2n):
             )
         return h
 
-    def _get_n1(self, n1):
+    def _get_n1(self, n1: int) -> float:
         if self.alternative == "two-sided":
             n1 = (
                 norm.sf(
@@ -343,7 +397,7 @@ class pwr_2p2n(pwr_2n):
             )
         return n1
 
-    def _get_n2(self, n2):
+    def _get_n2(self, n2: int) -> float:
         if self.alternative == "two-sided":
             n2 = (
                 norm.sf(
@@ -374,7 +428,7 @@ class pwr_2p2n(pwr_2n):
             )
         return n2
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         if self.alternative == "two-sided":
             sig_level = (
                 norm.sf(
@@ -407,7 +461,14 @@ class pwr_2p2n(pwr_2n):
 
 
 class pwr_anova:
-    def __init__(self, k, n, f, sig_level, power):
+    def __init__(
+        self,
+        k: Optional[int],
+        n: Optional[int],
+        f: Optional[float],
+        sig_level: Optional[float],
+        power: Optional[float],
+    ):
         """Class for handling a balanced one-way analysis of variance tests
 
         Parameters
@@ -429,47 +490,71 @@ class pwr_anova:
         self.sig_level = sig_level
         self.power = power
         self.method = "Balanced one-way analysis of variance power calculation"
+        self.note = "n is number in each group"
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         l = self.k * self.n * pow(self.f, 2)
         power = ncf.sf(
-            f_dist.isf(self.sig_level, self.k - 1, (self.n - 1) * self.k), self.k - 1, (self.n - 1) * self.k, l
+            f_dist.isf(self.sig_level, self.k - 1, (self.n - 1) * self.k),
+            self.k - 1,
+            (self.n - 1) * self.k,
+            l,
         )
         return power
 
-    def _get_k(self, k):
+    def _get_k(self, k: int) -> float:
         l = k * self.n * pow(self.f, 2)
         k = (
-                ncf.sf(f_dist.isf(self.sig_level, k - 1, (self.n - 1) * k), k - 1, (self.n - 1) * k, l)
-                - self.power
+            ncf.sf(
+                f_dist.isf(self.sig_level, k - 1, (self.n - 1) * k),
+                k - 1,
+                (self.n - 1) * k,
+                l,
+            )
+            - self.power
         )
         return k
 
-    def _get_n(self, n):
+    def _get_n(self, n: int) -> float:
         l = self.k * n * pow(self.f, 2)
         n = (
-                ncf.sf(f_dist.isf(self.sig_level, self.k - 1, (n - 1) * self.k), self.k - 1, (n - 1) * self.k, l)
-                - self.power
+            ncf.sf(
+                f_dist.isf(self.sig_level, self.k - 1, (n - 1) * self.k),
+                self.k - 1,
+                (n - 1) * self.k,
+                l,
+            )
+            - self.power
         )
         return n
 
-    def _get_effect_size(self, f):
+    def _get_effect_size(self, f: float) -> float:
         l = self.k * self.n * pow(f, 2)
         f = (
-                ncf.sf(f_dist.isf(self.sig_level, self.k - 1, (self.n - 1) * self.k), self.k - 1, (self.n - 1) * self.k, l)
-                - self.power
+            ncf.sf(
+                f_dist.isf(self.sig_level, self.k - 1, (self.n - 1) * self.k),
+                self.k - 1,
+                (self.n - 1) * self.k,
+                l,
+            )
+            - self.power
         )
         return f
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         l = self.k * self.n * pow(self.f, 2)
         sig_level = (
-                ncf.sf(f_dist.isf(sig_level, self.k - 1, (self.n - 1) * self.k), self.k - 1, (self.n - 1) * self.k, l)
-                - self.power
+            ncf.sf(
+                f_dist.isf(sig_level, self.k - 1, (self.n - 1) * self.k),
+                self.k - 1,
+                (self.n - 1) * self.k,
+                l,
+            )
+            - self.power
         )
         return sig_level
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.k is None:
@@ -487,13 +572,19 @@ class pwr_anova:
             "sig_level": self.sig_level,
             "power": self.power,
             "method": self.method,
-            "note": "n is number in each group",
+            "note": self.note,
         }
 
 
 class pwr_chisq:
-
-    def __init__(self, w, n, df, sig_level, power):
+    def __init__(
+        self,
+        w: Optional[float],
+        n: Optional[int],
+        df: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+    ):
         """Class for handling a chi-squared test
 
         Parameters
@@ -515,28 +606,29 @@ class pwr_chisq:
         self.sig_level = sig_level
         self.power = power
         self.method = "Chi squared power calculation"
+        self.note = "N is the number of observations"
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         k = chi2.isf(self.sig_level, self.df)
         power = ncx2.sf(k, self.df, self.n * pow(self.w, 2))
         return power
 
-    def _get_effect_size(self, w):
+    def _get_effect_size(self, w: float) -> float:
         k = chi2.isf(self.sig_level, self.df)
         w = ncx2.sf(k, self.df, self.n * pow(w, 2)) - self.power
         return w
 
-    def _get_n(self, n):
+    def _get_n(self, n: int) -> float:
         k = chi2.isf(self.sig_level, self.df)
-        n= ncx2.sf(k, self.df, n * pow(self.w, 2)) - self.power
+        n = ncx2.sf(k, self.df, n * pow(self.w, 2)) - self.power
         return n
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         k = chi2.isf(sig_level, self.df)
         sig_level = ncx2.sf(k, self.df, self.n * pow(self.w, 2)) - self.power
         return sig_level
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.w is None:
@@ -552,13 +644,19 @@ class pwr_chisq:
             "sig_level": self.sig_level,
             "power": self.power,
             "method": self.method,
-            "note": "N is the number of observations",
+            "note": self.note,
         }
 
 
 class pwr_f2:
-
-    def __init__(self, u, v, f2, sig_level, power):
+    def __init__(
+        self,
+        u: Optional[int],
+        v: Optional[int],
+        f2: Optional[float],
+        sig_level: Optional[float],
+        power: Optional[float],
+    ) -> None:
         """Class for handling a general linear model
 
         Parameters
@@ -581,32 +679,38 @@ class pwr_f2:
         self.power = power
         self.method = "Multiple regression power calculator"
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         l = self.f2 * (self.u + self.v + 1)
         power = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l)
         return power
 
-    def _get_u(self, u):
+    def _get_u(self, u: int) -> float:
         l = self.f2 * (u + self.v + 1)
         u = ncf.sf(f_dist.isf(self.sig_level, u, self.v), u, self.v, l) - self.power
         return u
 
-    def _get_v(self, v):
+    def _get_v(self, v: int) -> float:
         l = self.f2 * (self.u + v + 1)
         v = ncf.sf(f_dist.isf(self.sig_level, self.u, v), self.u, v, l) - self.power
         return v
 
-    def _get_effect_size(self, f2):
+    def _get_effect_size(self, f2: float) -> float:
         l = f2 * (self.u + self.v + 1)
-        f2 = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l) - self.power
+        f2 = (
+            ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l)
+            - self.power
+        )
         return f2
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         l = self.f2 * (self.u + self.v + 1)
-        sig_level = ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l) - self.power
+        sig_level = (
+            ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l)
+            - self.power
+        )
         return sig_level
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.u is None:
@@ -623,13 +727,19 @@ class pwr_f2:
             "effect_size": self.f2,
             "sig_level": self.sig_level,
             "power": self.power,
-            "method": self.method,
+            "method": self.method
         }
 
 
 class pwr_norm(pwr_1n):
-
-    def __init(self, d, n, sig_level, power, alternative):
+    def __init__(
+        self,
+        d: Optional[float],
+        n: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling the mean of a normal distribution with known variance
 
         Parameters
@@ -646,62 +756,89 @@ class pwr_norm(pwr_1n):
             A character string specifying our alternative hypothesis
         """
         super().__init__(d, n, sig_level, power, alternative)
-        self.method = "Mean power calculation for normal distribution with known variance"
+        self.method = (
+            "Mean power calculation for normal distribution with known variance"
+        )
+        self.note = None
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         if self.alternative == "two-sided":
-            power = norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n)) + norm.cdf(
-                norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n)
-            )
+            power = norm.sf(
+                norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n)
+            ) + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n))
         elif self.alternative == "greater":
             power = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(self.n))
         else:
             power = norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(self.n))
         return power
 
-    def _get_effect_size(self, effect_size):
+    def _get_effect_size(self, effect_size: float) -> float:
         if self.alternative == "two-sided":
             effect_size = (
-                    norm.sf(norm.isf(self.sig_level / 2) - effect_size * sqrt(self.n))
-                    + norm.cdf(norm.ppf(self.sig_level / 2) - effect_size * sqrt(self.n))
-                    - self.power
+                norm.sf(norm.isf(self.sig_level / 2) - effect_size * sqrt(self.n))
+                + norm.cdf(norm.ppf(self.sig_level / 2) - effect_size * sqrt(self.n))
+                - self.power
             )
         elif self.alternative == "greater":
-            effect_size = norm.sf(norm.isf(self.sig_level) - effect_size * sqrt(self.n)) - self.power
+            effect_size = (
+                norm.sf(norm.isf(self.sig_level) - effect_size * sqrt(self.n))
+                - self.power
+            )
         else:
-            effect_size = norm.cdf(norm.ppf(self.sig_level) - effect_size * sqrt(self.n)) - self.power
+            effect_size = (
+                norm.cdf(norm.ppf(self.sig_level) - effect_size * sqrt(self.n))
+                - self.power
+            )
         return effect_size
 
-    def _get_n(self, n):
+    def _get_n(self, n: int) -> float:
         if self.alternative == "two-sided":
             n = (
-                    norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(n))
-                    + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(n))
-                    - self.power
+                norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(n))
+                + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(n))
+                - self.power
             )
         elif self.alternative == "greater":
-            n = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n)) - self.power
+            n = (
+                norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n))
+                - self.power
+            )
         else:
-            n = norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n)) - self.power
+            n = (
+                norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n))
+                - self.power
+            )
         return n
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         if self.alternative == "two-sided":
             sig_level = (
-                    norm.sf(norm.isf(sig_level / 2) - self.effect_size * sqrt(self.n))
-                    + norm.cdf(norm.ppf(sig_level / 2) - self.effect_size * sqrt(self.n))
-                    - self.power
+                norm.sf(norm.isf(sig_level / 2) - self.effect_size * sqrt(self.n))
+                + norm.cdf(norm.ppf(sig_level / 2) - self.effect_size * sqrt(self.n))
+                - self.power
             )
         elif self.alternative == "greater":
-            sig_level = norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n)) - self.power
+            sig_level = (
+                norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n))
+                - self.power
+            )
         else:
-            sig_level = norm.cdf(norm.ppf(sig_level) - self.effect_size * sqrt(self.n)) - self.power
+            sig_level = (
+                norm.cdf(norm.ppf(sig_level) - self.effect_size * sqrt(self.n))
+                - self.power
+            )
         return sig_level
 
 
 class pwr_p(pwr_norm):
-
-    def __init(self, h, n, sig_level, power, alternative):
+    def __init__(
+        self,
+        h: Optional[float],
+        n: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling a one-sample proportion test
 
         Parameters
@@ -719,10 +856,18 @@ class pwr_p(pwr_norm):
         """
         super().__init__(h, n, sig_level, power, alternative)
         self.method = "Proportion power calculation for binomial distribution (arcsine transformation)"
+        self.note = None
 
 
 class pwr_r(pwr_1n):
-    def __init(self, r, n, sig_level, power, alternative):
+    def __init__(
+        self,
+        r: Optional[float],
+        n: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling a test of correlations
 
         Parameters
@@ -739,10 +884,13 @@ class pwr_r(pwr_1n):
             A character string specifying our alternative hypothesis
         """
         super().__init__(r, n, sig_level, power, alternative)
-        self.method = "Approximate correlation power calculation (arctanh transformation)"
+        self.method = (
+            "Approximate correlation power calculation (arctanh transformation)"
+        )
+        self.note = None
 
-    def _get_power(self):
-        if self.alternative == 'less':
+    def _get_power(self) -> float:
+        if self.alternative == "less":
             self.effect_size *= -1
         if self.alternative == "two-sided":
             sig_level = self.sig_level / 2
@@ -753,7 +901,7 @@ class pwr_r(pwr_1n):
         print(self.effect_size)
         zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
         zrc = atanh(rc)
-        if self.alternative == 'two-sided':
+        if self.alternative == "two-sided":
             power = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf(
                 (-zr - zrc) * sqrt(self.n - 3)
             )
@@ -761,8 +909,8 @@ class pwr_r(pwr_1n):
             power = norm.cdf((zr - zrc) * sqrt(self.n - 3))
         return power
 
-    def _get_effect_size(self, effect_size):
-        if self.alternative == 'less':
+    def _get_effect_size(self, effect_size: float) -> float:
+        if self.alternative == "less":
             effect_size *= -1
         if self.alternative == "two-sided":
             sig_level = self.sig_level / 2
@@ -772,16 +920,18 @@ class pwr_r(pwr_1n):
         zr = atanh(effect_size) + effect_size / (2 * (self.n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
         zrc = atanh(rc)
-        if self.alternative == 'two-sided':
-            effect_size = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf(
-                (-zr - zrc) * sqrt(self.n - 3)
-            ) - self.power
+        if self.alternative == "two-sided":
+            effect_size = (
+                norm.cdf((zr - zrc) * sqrt(self.n - 3))
+                + norm.cdf((-zr - zrc) * sqrt(self.n - 3))
+                - self.power
+            )
         else:
             effect_size = norm.cdf((zr - zrc) * sqrt(self.n - 3)) - self.power
         return effect_size
 
-    def _get_n(self, n):
-        if self.alternative == 'less':
+    def _get_n(self, n: int) -> float:
+        if self.alternative == "less":
             self.effect_size *= -1
         if self.alternative == "two-sided":
             sig_level = self.sig_level / 2
@@ -791,16 +941,18 @@ class pwr_r(pwr_1n):
         zr = atanh(self.effect_size) + self.effect_size / (2 * (n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + n - 2))
         zrc = atanh(rc)
-        if self.alternative == 'two-sided':
-            n = norm.cdf((zr - zrc) * sqrt(n - 3)) + norm.cdf(
-                (-zr - zrc) * sqrt(n - 3)
-            ) - self.power
+        if self.alternative == "two-sided":
+            n = (
+                norm.cdf((zr - zrc) * sqrt(n - 3))
+                + norm.cdf((-zr - zrc) * sqrt(n - 3))
+                - self.power
+            )
         else:
             n = norm.cdf((zr - zrc) * sqrt(n - 3)) - self.power
         return n
 
-    def _get_sig_level(self, sig_level):
-        if self.alternative == 'less':
+    def _get_sig_level(self, sig_level: float) -> float:
+        if self.alternative == "less":
             self.effect_size *= -1
         if self.alternative == "two-sided":
             sig_level /= 2
@@ -808,30 +960,28 @@ class pwr_r(pwr_1n):
         zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
         zrc = atanh(rc)
-        if self.alternative == 'two-sided':
-            sig_level = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf(
-                (-zr - zrc) * sqrt(self.n - 3)
-            ) - self.power
+        if self.alternative == "two-sided":
+            sig_level = (
+                norm.cdf((zr - zrc) * sqrt(self.n - 3))
+                + norm.cdf((-zr - zrc) * sqrt(self.n - 3))
+                - self.power
+            )
         else:
             sig_level = norm.cdf((zr - zrc) * sqrt(self.n - 3)) - self.power
         return sig_level
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
-            if self.alternative == 'two-sided':
+            if self.alternative == "two-sided":
                 self.effect_size = brentq(self._get_effect_size, 1e-10, 1 - 1e-10)
             else:
-                self.effect_size = brentq(
-                    self._get_effect_size, -1 + 1e-10, 1 - 1e-10
-                )
+                self.effect_size = brentq(self._get_effect_size, -1 + 1e-10, 1 - 1e-10)
         elif self.n is None:
             self.n = np.ceil(brentq(self._get_n, 4 + 1e-10, 1e09))
         else:
-            self.sig_level = brentq(
-                self._get_sig_level, 1e-10, 1 - 1e-10
-            )
+            self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
         return {
             "effect_size": self.effect_size,
             "n": self.n,
@@ -843,7 +993,15 @@ class pwr_r(pwr_1n):
 
 
 class pwr_t:
-    def __init__(self, n, d, sig_level, power, type, alternative):
+    def __init__(
+        self,
+        n: Optional[int],
+        d: Optional[float],
+        sig_level: Optional[float],
+        power: Optional[float],
+        type: str = "two-sample",
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling a t-test of means
 
         Parameters
@@ -867,11 +1025,11 @@ class pwr_t:
         self.power = power
         self.type = type.casefold()
         self.alternative = alternative.casefold()
-        if self.type == 'one-sample':
-            self.method = 'One Sample'
-            self.note = "No Note"
+        if self.type == "one-sample":
+            self.method = "One Sample"
+            self.note = None
             self.t_sample = 1
-        elif self.type == 'paired':
+        elif self.type == "paired":
             self.method = "Paired Sample"
             self.note = "n is number of pairs"
             self.t_sample = 1
@@ -880,7 +1038,7 @@ class pwr_t:
             self.note = "n is the number in each group"
             self.t_sample = 2
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         nu = (self.n - 1) * self.t_sample
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
@@ -888,58 +1046,104 @@ class pwr_t:
                 -qu, nu, sqrt(self.n / self.t_sample) * self.d
             )
         elif self.alternative == "greater":
-            power = nct.sf(t_dist.isf(self.sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d)
+            power = nct.sf(
+                t_dist.isf(self.sig_level, nu),
+                nu,
+                sqrt(self.n / self.t_sample) * self.d,
+            )
         else:
-            power = nct.cdf(t_dist.ppf(self.sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d)
+            power = nct.cdf(
+                t_dist.ppf(self.sig_level, nu),
+                nu,
+                sqrt(self.n / self.t_sample) * self.d,
+            )
         return power
 
-    def _get_effect_size(self, effect_size):
+    def _get_effect_size(self, effect_size: float) -> float:
         nu = (self.n - 1) * self.t_sample
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
-            effect_size = nct.sf(qu, nu, sqrt(self.n / self.t_sample) * effect_size) + nct.cdf(
-                -qu, nu, sqrt(self.n / self.t_sample) * effect_size
-            ) - self.power
+            effect_size = (
+                nct.sf(qu, nu, sqrt(self.n / self.t_sample) * effect_size)
+                + nct.cdf(-qu, nu, sqrt(self.n / self.t_sample) * effect_size)
+                - self.power
+            )
         elif self.alternative == "greater":
-            effect_size = nct.sf(t_dist.isf(self.sig_level, nu), nu, sqrt(self.n / self.t_sample) * effect_size) - self.power
+            effect_size = (
+                nct.sf(
+                    t_dist.isf(self.sig_level, nu),
+                    nu,
+                    sqrt(self.n / self.t_sample) * effect_size,
+                )
+                - self.power
+            )
         else:
-            effect_size = nct.cdf(t_dist.ppf(self.sig_level, nu), nu, sqrt(self.n / self.t_sample) * effect_size) - self.power
+            effect_size = (
+                nct.cdf(
+                    t_dist.ppf(self.sig_level, nu),
+                    nu,
+                    sqrt(self.n / self.t_sample) * effect_size,
+                )
+                - self.power
+            )
         return effect_size
 
-    def _get_n(self, n):
+    def _get_n(self, n: int) -> float:
         nu = (n - 1) * self.t_sample
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
-            n = nct.sf(qu, nu, sqrt(n / self.t_sample) * self.d) + nct.cdf(
-                -qu, nu, sqrt(n / self.t_sample) * self.d
-            ) - self.power
+            n = (
+                nct.sf(qu, nu, sqrt(n / self.t_sample) * self.d)
+                + nct.cdf(-qu, nu, sqrt(n / self.t_sample) * self.d)
+                - self.power
+            )
         elif self.alternative == "greater":
-            n = nct.sf(t_dist.isf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d) - self.power
+            n = (
+                nct.sf(
+                    t_dist.isf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d
+                )
+                - self.power
+            )
         else:
-            n = nct.cdf(t_dist.ppf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d) - self.power
+            n = (
+                nct.cdf(
+                    t_dist.ppf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d
+                )
+                - self.power
+            )
         return n
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         nu = (self.n - 1) * self.t_sample
         if self.alternative == "two-sided":
             qu = t_dist.isf(sig_level / 2, nu)
-            sig_level = nct.sf(qu, nu, sqrt(self.n / self.t_sample) * self.d) + nct.cdf(
-                -qu, nu, sqrt(self.n / self.t_sample) * self.d
-            ) - self.power
+            sig_level = (
+                nct.sf(qu, nu, sqrt(self.n / self.t_sample) * self.d)
+                + nct.cdf(-qu, nu, sqrt(self.n / self.t_sample) * self.d)
+                - self.power
+            )
         elif self.alternative == "greater":
-            sig_level = nct.sf(t_dist.isf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d) - self.power
+            sig_level = (
+                nct.sf(
+                    t_dist.isf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d
+                )
+                - self.power
+            )
         else:
-            sig_level = nct.cdf(t_dist.ppf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d) - self.power
+            sig_level = (
+                nct.cdf(
+                    t_dist.ppf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d
+                )
+                - self.power
+            )
         return sig_level
 
-    def pwr_test(self):
+    def pwr_test(self) -> Dict:
         if self.power is None:
             self.power = self._get_power()
         elif self.d is None:
             if self.alternative == "two-sided":
-                self.d = brentq(
-                    self._get_d, 1e-07, 10
-                )
+                self.d = brentq(self._get_effect_size, 1e-07, 10)
             elif self.alternative == "greater":
                 self.d = brentq(self._get_effect_size, -5, 10)
             else:
@@ -948,19 +1152,37 @@ class pwr_t:
             self.n = np.ceil(brentq(self._get_n, 2 + 1e-10, 1e09))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
-        return {
-            "n": self.n,
-            "effect_size": self.d,
-            "sig_level": self.sig_level,
-            "power": self.power,
-            "alternative": self.alternative,
-            "method": "{} t test power calculation".format(self.method),
-            "note": self.note,
-        }
+        if self.note is not None:
+            return {
+                "n": self.n,
+                "effect_size": self.d,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": "{} t test power calculation".format(self.method),
+                "note": self.note,
+            }
+        else:
+            return {
+                "n": self.n,
+                "effect_size": self.d,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": "{} t test power calculation".format(self.method)
+            }
 
 
 class pwr_t2n(pwr_2n):
-    def __init(self, d, n1, n2, sig_level, power, alternative):
+    def __init__(
+        self,
+        d: Optional[float],
+        n1: Optional[int],
+        n2: Optional[int],
+        sig_level: Optional[float],
+        power: Optional[float],
+        alternative: str = "two-sided",
+    ) -> None:
         """Class for handling a two-sample t-test of means
 
         Parameters
@@ -981,119 +1203,143 @@ class pwr_t2n(pwr_2n):
         super().__init__(d, n1, n2, sig_level, power, alternative)
         self.method = "T test power calculation"
 
-    def _get_power(self):
+    def _get_power(self) -> float:
         nu = self.n1 + self.n2 - 2
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
-            power = nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))) + nct.cdf(
+            power = nct.sf(
+                qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
+            ) + nct.cdf(
                 -qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
             )
         elif self.alternative == "greater":
             power = nct.sf(
-                t_dist.isf(self.sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
+                t_dist.isf(self.sig_level, nu),
+                nu,
+                self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)),
             )
         else:
             power = nct.cdf(
-                t_dist.ppf(self.sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
+                t_dist.ppf(self.sig_level, nu),
+                nu,
+                self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)),
             )
         return power
 
-    def _get_effect_size(self, effect_size):
+    def _get_effect_size(self, effect_size: float) -> float:
         nu = self.n1 + self.n2 - 2
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
             effect_size = (
-                    nct.sf(qu, nu, effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
-                    + nct.cdf(-qu, nu, effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
-                    - self.power
+                nct.sf(qu, nu, effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
+                + nct.cdf(-qu, nu, effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
+                - self.power
             )
         elif self.alternative == "greater":
             effect_size = (
-                    nct.sf(
-                        t_dist.isf(self.sig_level, nu), nu, effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
-                    )
-                    - self.power
+                nct.sf(
+                    t_dist.isf(self.sig_level, nu),
+                    nu,
+                    effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)),
+                )
+                - self.power
             )
         else:
             effect_size = (
-                    nct.cdf(
-                        t_dist.ppf(self.sig_level, nu), nu, effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
-                    )
-                    - self.power
+                nct.cdf(
+                    t_dist.ppf(self.sig_level, nu),
+                    nu,
+                    effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)),
+                )
+                - self.power
             )
         return effect_size
 
-    def _get_n1(self, n1):
+    def _get_n1(self, n1: int) -> float:
         nu = n1 + self.n2 - 2
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
             n1 = (
-                    nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2)))
-                    + nct.cdf(-qu, nu, self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2)))
-                    - self.power
+                nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2)))
+                + nct.cdf(-qu, nu, self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2)))
+                - self.power
             )
         elif self.alternative == "greater":
             n1 = (
-                    nct.sf(
-                        t_dist.isf(self.sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2))
-                    )
-                    - self.power
+                nct.sf(
+                    t_dist.isf(self.sig_level, nu),
+                    nu,
+                    self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2)),
+                )
+                - self.power
             )
         else:
             n1 = (
-                    nct.cdf(
-                        t_dist.ppf(self.sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2))
-                    )
-                    - self.power
+                nct.cdf(
+                    t_dist.ppf(self.sig_level, nu),
+                    nu,
+                    self.effect_size * (1 / sqrt(1 / n1 + 1 / self.n2)),
+                )
+                - self.power
             )
         return n1
 
-    def _get_n2(self, n2):
+    def _get_n2(self, n2: int) -> float:
         nu = self.n1 + n2 - 2
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
             n2 = (
-                    nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2)))
-                    + nct.cdf(-qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2)))
-                    - self.power
+                nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2)))
+                + nct.cdf(-qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2)))
+                - self.power
             )
         elif self.alternative == "greater":
             n2 = (
-                    nct.sf(
-                        t_dist.isf(self.sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2))
-                    )
-                    - self.power
+                nct.sf(
+                    t_dist.isf(self.sig_level, nu),
+                    nu,
+                    self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2)),
+                )
+                - self.power
             )
         else:
             n2 = (
-                    nct.cdf(
-                        t_dist.ppf(self.sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2))
-                    )
-                    - self.power
+                nct.cdf(
+                    t_dist.ppf(self.sig_level, nu),
+                    nu,
+                    self.effect_size * (1 / sqrt(1 / self.n1 + 1 / n2)),
+                )
+                - self.power
             )
         return n2
 
-    def _get_sig_level(self, sig_level):
+    def _get_sig_level(self, sig_level: float) -> float:
         nu = self.n1 + self.n2 - 2
         if self.alternative == "two-sided":
             qu = t_dist.isf(sig_level / 2, nu)
             sig_level = (
-                    nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
-                    + nct.cdf(-qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
-                    - self.power
+                nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
+                + nct.cdf(
+                    -qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
+                )
+                - self.power
             )
         elif self.alternative == "greater":
             sig_level = (
-                    nct.sf(
-                        t_dist.isf(sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
-                    )
-                    - self.power
+                nct.sf(
+                    t_dist.isf(sig_level, nu),
+                    nu,
+                    self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)),
+                )
+                - self.power
             )
         else:
             sig_level = (
-                    nct.cdf(
-                        t_dist.ppf(sig_level, nu), nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
-                    )
-                    - self.power
+                nct.cdf(
+                    t_dist.ppf(sig_level, nu),
+                    nu,
+                    self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)),
+                )
+                - self.power
             )
         return sig_level
