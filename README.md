@@ -7,7 +7,7 @@ The goal of this package is to reverse engineer the R library to provide a Pytho
 
 ## Quick Example
 ``` 
-from pwr_tests import *
+from pyPWR.pwr_tests import *
 power = pwr_2p_test(h=0.3, n=200, sig_level=0.05, alternative='greater')
 power['power']
 0.9123145
