@@ -14,3 +14,6 @@ power['power']
 ```
 
 Note that similar to the R library, one of `effect_size`, `sample_size`, `sig_level`, or `power` must be left as None. 
+
+## Notes
+Due to the fact that `pwr` uses R's [uniroot](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/uniroot) for root solving whereas I used Scipy's [brentq](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.brentq.html) or [bisect](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.bisect.html), there are going to be some minor differences in terms of the values reported for `effect_size` or `sig_level`; however, they should be within error of each other (1e-03)
