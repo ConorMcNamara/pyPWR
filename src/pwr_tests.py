@@ -20,6 +20,7 @@ def pwr_2p_test(
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test, or determine parameters to obtain target power (similar to power.prop.test).
 
@@ -35,6 +36,8 @@ def pwr_2p_test(
         Power of test (1 minus Type II error probability). Must be betwen 0 and 1
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -52,14 +55,33 @@ def pwr_2p_test(
     if alternative == "two-sided" and h is not None:
         h = abs(h)
     pwr = pwr_2p(h, n, sig_level, power, alternative).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"h = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                 + '\t' + f"alternative = {pwr['alternative']}" + "\n" * 2
-                 + f"NOTE: {pwr['note']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"h = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"n = {pwr['n']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n"
+            + "\t"
+            + f"alternative = {pwr['alternative']}"
+            + "\n" * 2
+            + f"NOTE: {pwr['note']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -70,6 +92,7 @@ def pwr_2p2n_test(
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test, or determine parameters to obtain target power.
 
@@ -87,6 +110,8 @@ def pwr_2p2n_test(
         Power of the test (1 minus Type II error probability). Must be between 0 and 1
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -110,15 +135,37 @@ def pwr_2p2n_test(
     if alternative == "two-sided" and h is not None:
         h = abs(h)
     pwr = pwr_2p2n(h, n1, n2, sig_level, power, alternative).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"h = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " + f"n1 = {pwr['n1']}" + "\n"
-                 + '\t' * 2 + " " + f"n2 = {pwr['n2']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                 + '\t' + f"alternative = {pwr['alternative']}" + "\n" * 2
-                 + f"NOTE: {pwr['note']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"h = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " "
+            + f"n1 = {pwr['n1']}"
+            + "\n"
+            + "\t" * 2
+            + " "
+            + f"n2 = {pwr['n2']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n"
+            + "\t"
+            + f"alternative = {pwr['alternative']}"
+            + "\n" * 2
+            + f"NOTE: {pwr['note']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -128,6 +175,7 @@ def pwr_anova_test(
     f: Optional[float] = None,
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
@@ -143,6 +191,8 @@ def pwr_anova_test(
         Significance level (Type I error probability). Must be between 0 and 1
     power: float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -163,14 +213,34 @@ def pwr_anova_test(
     if power is not None and (power < 0 or power > 1):
         raise ValueError("power must be between 0 and 1")
     pwr = pwr_anova(k, n, f, sig_level, power).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"k = {pwr['k']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"f = {pwr['effect_size']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n" * 2
-                 + f"NOTE: {pwr['note']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"k = {pwr['k']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"n = {pwr['n']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"f = {pwr['effect_size']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n" * 2
+            + f"NOTE: {pwr['note']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -180,6 +250,7 @@ def pwr_chisq_test(
     df: int = 1,
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
+    print_pretty: bool = True
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
@@ -195,6 +266,8 @@ def pwr_chisq_test(
         Significance level (Type I error probability). Must be between 0 and 1
     power: float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -213,14 +286,34 @@ def pwr_chisq_test(
     if power is not None and (power < 0 or power > 1):
         raise ValueError("power must be between 0 and 1")
     pwr = pwr_chisq(w, n, df, sig_level, power).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"w = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                 + '\t' * 2 + " " + f"df = {pwr['df']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n" * 2
-                 + f"NOTE: {pwr['note']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"w = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"n = {pwr['n']}"
+            + "\n"
+            + "\t" * 2
+            + " "
+            + f"df = {pwr['df']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n" * 2
+            + f"NOTE: {pwr['note']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -230,6 +323,7 @@ def pwr_f2_test(
     f2: Optional[float] = None,
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
@@ -245,6 +339,8 @@ def pwr_f2_test(
         Significance level (Type I error probability). Must be between 0 and 1
     power: float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -265,13 +361,32 @@ def pwr_f2_test(
     if power is not None and (power < 0 or power > 1):
         raise ValueError("power must be between 0 and 1")
     pwr = pwr_f2(u, v, f2, sig_level, power).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"u = {pwr['u']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"v = {pwr['v']}" + "\n"
-                 + '\t' * 2 + " " + f"f2 = {pwr['effect_size']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"u = {pwr['u']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"v = {pwr['v']}"
+            + "\n"
+            + "\t" * 2
+            + " "
+            + f"f2 = {pwr['effect_size']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -281,6 +396,7 @@ def pwr_norm_test(
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
@@ -296,6 +412,8 @@ def pwr_norm_test(
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -315,13 +433,31 @@ def pwr_norm_test(
     if alternative == "two-sided" and d is not None:
         d = abs(d)
     pwr = pwr_norm(d, n, sig_level, power, alternative).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"d = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                 + '\t' + f"alternative = {pwr['alternative']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"d = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"n = {pwr['n']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n"
+            + "\t"
+            + f"alternative = {pwr['alternative']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -331,6 +467,7 @@ def pwr_p_test(
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
@@ -346,6 +483,8 @@ def pwr_p_test(
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -365,13 +504,31 @@ def pwr_p_test(
     if h is not None and alternative == "two-sided":
         h = abs(h)
     pwr = pwr_p(h, n, sig_level, power, alternative).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"h = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                 + '\t' + f"alternative = {pwr['alternative']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"h = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"n = {pwr['n']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n"
+            + "\t"
+            + f"alternative = {pwr['alternative']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -381,6 +538,7 @@ def pwr_r_test(
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
@@ -396,6 +554,8 @@ def pwr_r_test(
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -415,13 +575,31 @@ def pwr_r_test(
     if alternative == "two-sided" and r is not None:
         r = abs(r)
     pwr = pwr_r(r, n, sig_level, power, alternative).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"r = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                 + '\t' + f"alternative = {pwr['alternative']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"r = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " " * 2
+            + f"n = {pwr['n']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n"
+            + "\t"
+            + f"alternative = {pwr['alternative']}"
+        )
+        print(str_print)
     return pwr
 
 
@@ -430,8 +608,9 @@ def pwr_t_test(
     d: Optional[float] = None,
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
-    type: str = "paired",
+    test_type: str = "paired",
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of tests or determine parameters to obtain target power (similar to as power.t.test)
 
@@ -445,10 +624,12 @@ def pwr_t_test(
         Significance level (Type I error probability). Must be between 0 and 1
     power: float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    type: {'two-sample', 'one-sample', 'paired'}
+    test_type: {'two-sample', 'one-sample', 'paired'}
         Type of t-test: One sample, two sample or paired sample
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -464,23 +645,59 @@ def pwr_t_test(
         raise ValueError("sig_level must be between 0 and 1")
     if power is not None and (power < 0 or power > 1):
         raise ValueError("power must be between 0 and 1")
-    pwr = pwr_t(n, d, sig_level, power, type, alternative).pwr_test()
-    if "note" in pwr.keys():
-        str_print = ('\t' + pwr['method'] + "\n" * 2
-                     + '\t' * 2 + " " * 2 + f"d = {pwr['effect_size']}" + "\n"
-                     + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                     + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                     + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                     + '\t' + f"alternative = {pwr['alternative']}" + "\n" * 2
-                     + f"NOTE: {pwr['note']}")
-    else:
-        str_print = ('\t' + pwr['method'] + "\n" * 2
-                     + '\t' * 2 + " " * 2 + f"d = {pwr['effect_size']}" + "\n"
-                     + '\t' * 2 + " " * 2 + f"n = {pwr['n']}" + "\n"
-                     + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                     + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                     + '\t' + f"alternative = {pwr['alternative']}")
-    print(str_print)
+    pwr = pwr_t(n, d, sig_level, power, test_type, alternative).pwr_test()
+    if print_pretty:
+        if "note" in pwr.keys():
+            str_print = (
+                "\t"
+                + pwr["method"]
+                + "\n" * 2
+                + "\t" * 2
+                + " " * 2
+                + f"d = {pwr['effect_size']}"
+                + "\n"
+                + "\t" * 2
+                + " " * 2
+                + f"n = {pwr['n']}"
+                + "\n"
+                + "\t"
+                + " " * 2
+                + f"sig_level = {pwr['sig_level']}"
+                + "\n"
+                + "\t"
+                + " " * 6
+                + f"power = {pwr['power']}"
+                + "\n"
+                + "\t"
+                + f"alternative = {pwr['alternative']}"
+                + "\n" * 2
+                + f"NOTE: {pwr['note']}"
+            )
+        else:
+            str_print = (
+                "\t"
+                + pwr["method"]
+                + "\n" * 2
+                + "\t" * 2
+                + " " * 2
+                + f"d = {pwr['effect_size']}"
+                + "\n"
+                + "\t" * 2
+                + " " * 2
+                + f"n = {pwr['n']}"
+                + "\n"
+                + "\t"
+                + " " * 2
+                + f"sig_level = {pwr['sig_level']}"
+                + "\n"
+                + "\t"
+                + " " * 6
+                + f"power = {pwr['power']}"
+                + "\n"
+                + "\t"
+                + f"alternative = {pwr['alternative']}"
+            )
+        print(str_print)
     return pwr
 
 
@@ -491,6 +708,7 @@ def pwr_t2n_test(
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
     alternative: str = "two-sided",
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of tests or determine parameters to obtain target power (similar to as power.t.test)
 
@@ -508,6 +726,8 @@ def pwr_t2n_test(
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     alternative: {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
+    print_pretty: bool, default=True
+        Whether we wish to print the results in a pretty format or not
 
     Returns
     -------
@@ -531,13 +751,35 @@ def pwr_t2n_test(
     if alternative == "two-sided" and d is not None:
         d = abs(d)
     pwr = pwr_t2n(d, n1, n2, sig_level, power, alternative).pwr_test()
-    str_print = ('\t' + pwr['method'] + "\n" * 2
-                 + '\t' * 2 + " " * 2 + f"d = {pwr['effect_size']}" + "\n"
-                 + '\t' * 2 + " " + f"n1 = {pwr['n1']}" + "\n"
-                 + '\t' * 2 + " " + f"n2 = {pwr['n2']}" + "\n"
-                 + '\t' + " " * 2 + f"sig_level = {pwr['sig_level']}" + "\n"
-                 + '\t' + " " * 6 + f"power = {pwr['power']}" + "\n"
-                 + '\t' + f"alternative = {pwr['alternative']}" + "\n" * 2
-                 + f"NOTE: {pwr['note']}")
-    print(str_print)
+    if print_pretty:
+        str_print = (
+            "\t"
+            + pwr["method"]
+            + "\n" * 2
+            + "\t" * 2
+            + " " * 2
+            + f"d = {pwr['effect_size']}"
+            + "\n"
+            + "\t" * 2
+            + " "
+            + f"n1 = {pwr['n1']}"
+            + "\n"
+            + "\t" * 2
+            + " "
+            + f"n2 = {pwr['n2']}"
+            + "\n"
+            + "\t"
+            + " " * 2
+            + f"sig_level = {pwr['sig_level']}"
+            + "\n"
+            + "\t"
+            + " " * 6
+            + f"power = {pwr['power']}"
+            + "\n"
+            + "\t"
+            + f"alternative = {pwr['alternative']}"
+            + "\n" * 2
+            + f"NOTE: {pwr['note']}"
+        )
+        print(str_print)
     return pwr
