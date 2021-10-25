@@ -812,7 +812,7 @@ class Test_T:
 
     @staticmethod
     def test_t_results() -> None:
-        p_results = pwr_tests.pwr_t_test(d=0.2, n=60, sig_level=0.10, type="one-sample", alternative="two-sided")
+        p_results = pwr_tests.pwr_t_test(d=0.2, n=60, sig_level=0.10, test_type="one-sample", alternative="two-sided")
         # pwr.t.test(d=0.2,n=60,sig.level=0.10,type="one.sample",alternative="two.sided")
         #
         #      One-sample t test power calculation
@@ -825,7 +825,7 @@ class Test_T:
         expected = 0.4555818
         assert p_results['power'] == pytest.approx(expected, 0.0001)
 
-        d_results = pwr_tests.pwr_t_test(n=100, power=0.8, sig_level=0.05, type="paired", alternative="greater")
+        d_results = pwr_tests.pwr_t_test(n=100, power=0.8, sig_level=0.05, test_type="paired", alternative="greater")
         # pwr.t.test(n=100,power=0.8,sig.level=0.05,type="paired",alternative="greater")
         #
         #      Paired t test power calculation
@@ -840,7 +840,7 @@ class Test_T:
         expected = 0.2503641
         assert d_results['effect_size'] == pytest.approx(expected, 0.0001)
 
-        n_results = pwr_tests.pwr_t_test(d=0.3, power=0.75, sig_level=0.05, type='two-sample', alternative='greater')
+        n_results = pwr_tests.pwr_t_test(d=0.3, power=0.75, sig_level=0.05, test_type='two-sample', alternative='greater')
         # pwr.t.test(d=0.3,power=0.75,sig.level=0.05,type="two.sample",alternative="greater")
         #
         #      Two-sample t test power calculation
@@ -855,7 +855,7 @@ class Test_T:
         expected = 121
         assert n_results['n'] == expected
 
-        s_results = pwr_tests.pwr_t_test(d=-0.1, power=0.75, n=100, type='paired', alternative='less')
+        s_results = pwr_tests.pwr_t_test(d=-0.1, power=0.75, n=100, test_type='paired', alternative='less')
         # pwr.t.test(d=-0.1, power=0.75, n=100, type='paired', alternative='less', sig.level = NULL)
         #
         #      Paired t test power calculation
