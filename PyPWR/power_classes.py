@@ -157,11 +157,11 @@ class pwr_2n(abc.ABC):
             elif self.alternative == "greater":
                 self.effect_size = brentq(self._get_effect_size, -5, 10)
             else:
-                self.effect_size = brentq(self._get_effect_size, -10, 5)
+                self.effect_size = brentq(self._get_effect_size, -10, 4)
         elif self.n1 is None:
-            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 1e09))
+            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
         elif self.n2 is None:
-            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 1e09))
+            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 500))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
         if self.note is not None:
@@ -632,7 +632,7 @@ class pwr_chisq:
         if self.power is None:
             self.power = self._get_power()
         elif self.w is None:
-            self.w = brentq(self._get_effect_size, 1e-10, 1e09)
+            self.w = brentq(self._get_effect_size, 1e-10, 1e08)
         elif self.n is None:
             self.n = np.ceil(brentq(self._get_n, 1 + 1e-10, 1e09))
         else:
