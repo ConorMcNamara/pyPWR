@@ -680,32 +680,32 @@ class pwr_f2:
         self.method = "Multiple regression power calculator"
 
     def _get_power(self) -> float:
-        l = self.f2 * (self.u + self.v + 1)
-        power = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l)
+        l_var = self.f2 * (self.u + self.v + 1)
+        power = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var)
         return power
 
     def _get_u(self, u: int) -> float:
-        l = self.f2 * (u + self.v + 1)
-        u = ncf.sf(f_dist.isf(self.sig_level, u, self.v), u, self.v, l) - self.power
+        l_var = self.f2 * (u + self.v + 1)
+        u = ncf.sf(f_dist.isf(self.sig_level, u, self.v), u, self.v, l_var) - self.power
         return u
 
     def _get_v(self, v: int) -> float:
-        l = self.f2 * (self.u + v + 1)
-        v = ncf.sf(f_dist.isf(self.sig_level, self.u, v), self.u, v, l) - self.power
+        l_var = self.f2 * (self.u + v + 1)
+        v = ncf.sf(f_dist.isf(self.sig_level, self.u, v), self.u, v, l_var) - self.power
         return v
 
     def _get_effect_size(self, f2: float) -> float:
-        l = f2 * (self.u + self.v + 1)
+        l_var = f2 * (self.u + self.v + 1)
         f2 = (
-            ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l)
+            ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var)
             - self.power
         )
         return f2
 
     def _get_sig_level(self, sig_level: float) -> float:
-        l = self.f2 * (self.u + self.v + 1)
+        l_var = self.f2 * (self.u + self.v + 1)
         sig_level = (
-            ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l)
+            ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l_var)
             - self.power
         )
         return sig_level
