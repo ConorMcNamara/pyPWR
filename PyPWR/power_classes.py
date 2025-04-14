@@ -22,15 +22,15 @@ class pwr_1n(abc.ABC):
 
         Parameters
         ----------
-        effect_size: float
+        effect_size : float
             The effect size
-        n: int
+        n : int
             Number of observations (per sample)
-        sig_level: float
+        sig_level : float
             Significance level (Type I error probability). Must be between 0 and 1
-        power: float
+        power : float
             Power of test (1 minus Type II error probability). Must be between 0 and 1
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying the alternative hypothesis
         """
         self.effect_size = effect_size
@@ -106,17 +106,17 @@ class pwr_2n(abc.ABC):
 
         Parameters
         ----------
-        effect_size: float, default=None
+        effect_size : float, default=None
             The effect size
-        n1: int, default=None
+        n1 : int, default=None
             Number of observations in the first sample
-        n2: int, default=None
+        n2 : int, default=None
             Number of observations in the second sample
-        sig_level: float, default=None
+        sig_level : float, default=None
             Significance level (Type I error probability). Must be between 0 and 1
-        power: float, default=None
+        power : float, default=None
             Power of the test (1 minus Type II error probability). Must be between 0 and 1
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying the alternative hypothesis
         """
         self.effect_size = effect_size
@@ -200,15 +200,15 @@ class pwr_2p(pwr_1n):
 
         Parameters
         ----------
-        h: float
+        h : float
             Our effect size
-        n: int
+        n : int
             Our sample size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         super().__init__(h, n, sig_level, power, alternative)
@@ -299,17 +299,17 @@ class pwr_2p2n(pwr_2n):
 
         Parameters
         ----------
-        h: float
+        h : float
             Our effect size
-        n1: int
+        n1 : int
             Sample size for the first group
-        n2: int
+        n2 : int
             Sample size for the second group
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         super().__init__(h, n1, n2, sig_level, power, alternative)
@@ -473,15 +473,15 @@ class pwr_anova:
 
         Parameters
         ----------
-        k: int
+        k : int
             Number of groups
-        n: int
+        n : int
             Number of samples per group
-        f: float
+        f : float
             Effect size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
         """
         self.k = k
@@ -589,15 +589,15 @@ class pwr_chisq:
 
         Parameters
         ----------
-        w: float
+        w : float
             Our effect size
-        n: int
+        n : int
             Our sample size
-        df: int
+        df : int
             Our degrees of freedom
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
         """
         self.w = w
@@ -661,15 +661,15 @@ class pwr_f2:
 
         Parameters
         ----------
-        u: int
+        u : int
             Degrees of freedom for the numerator
-        v: int
+        v : int
             Degrees of freedom for the denominator
-        f2: float
+        f2 : float
             OUr effect size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
         """
         self.u = u
@@ -744,15 +744,15 @@ class pwr_norm(pwr_1n):
 
         Parameters
         ----------
-        d: float
+        d : float
             Our effect size
-        n: int
+        n : int
             Our sample size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         super().__init__(d, n, sig_level, power, alternative)
@@ -843,15 +843,15 @@ class pwr_p(pwr_norm):
 
         Parameters
         ----------
-        h: float
+        h : float
             Our effect size
-        n: int
+        n : int
             Our sample size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         super().__init__(h, n, sig_level, power, alternative)
@@ -872,15 +872,15 @@ class pwr_r(pwr_1n):
 
         Parameters
         ----------
-        r: float
+        r : float
             Our effect size
-        n: int
+        n : int
             Our sample size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         super().__init__(r, n, sig_level, power, alternative)
@@ -1006,17 +1006,17 @@ class pwr_t:
 
         Parameters
         ----------
-        n: int
+        n : int
             Our sample size
-        d: float
+        d : float
             Our effect size
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        type: {'two-sample', 'one-sample', 'paired'}
+        type : {'two-sample', 'one-sample', 'paired'}
             Type of t-test: One sample, two sample or paired sample
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         self.n = n
@@ -1187,17 +1187,17 @@ class pwr_t2n(pwr_2n):
 
         Parameters
         ----------
-        d: float
+        d : float
             Our effect size
-        n1: int
+        n1 : int
             Sample size of our first group
-        n2: int
+        n2 : int
             Sample size of our second group
-        sig_level: float
+        sig_level : float
             The significance level of our test. Must be between 0 and 1 if specified
-        power: float
+        power : float
             The power of our test. Must be between 0 and 1 if specified
-        alternative: {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}
             A character string specifying our alternative hypothesis
         """
         super().__init__(d, n1, n2, sig_level, power, alternative)
