@@ -1,6 +1,6 @@
 import pytest
 
-import src.pwr_tests as pwr_tests
+from pyPWR.src import pwr_tests
 
 
 class Test_2p:
