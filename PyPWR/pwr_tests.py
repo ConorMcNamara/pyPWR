@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from src.power_classes import (
+from PyPWR.power_classes import (
     pwr_2p,
     pwr_2p2n,
     pwr_anova,
