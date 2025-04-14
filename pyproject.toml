@@ -1,7 +1,28 @@
 [project]
 name = "pypwr"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "A Python package for assessing the power of multiple statiscal tests."
+readme-content-type = "text/markdown"
+keywords = [
+    "power analysis",
+    "multiple testing",
+    "statistical tests",
+    "hypothesis testing",
+    "python package"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis"
+]
 authors = [
     {name = "ConorMcNamara",email = "conor.s.mcnamara@gmail.com"}
 ]
