@@ -26,17 +26,17 @@ def pwr_2p_test(
 
     Parameters
     ----------
-    h: float, default=None
+    h : float, default=None
         The effect size
-    n: int, default=None
+    n : int, default=None
         Number of observations (per sample)
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be betwen 0 and 1
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -98,19 +98,19 @@ def pwr_2p2n_test(
 
     Parameters
     ----------
-    h: float, default=None
+    h : float, default=None
         The effect size
-    n1: int, default=None
+    n1 : int, default=None
         Number of observations in the first sample
-    n2: int, default=None
+    n2 : int, default=None
         Number of observations in the second sample
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of the test (1 minus Type II error probability). Must be between 0 and 1
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -181,17 +181,17 @@ def pwr_anova_test(
 
     Parameters
     ----------
-    k: int, default=None
+    k : int, default=None
         Number of groups
-    n: int, default=None
+    n : int, default=None
         Number of observations (per group)
-    f: float, default=None
+    f : float, default=None
         Effect size
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -256,17 +256,17 @@ def pwr_chisq_test(
 
     Parameters
     ----------
-    w: float, default=None
+    w : float, default=None
         Effect size
-    n: int, default=None
+    n : int, default=None
         Total number of observations
-    df: int, default=1
+    df : int, default=1
         Degrees of freedom
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -329,17 +329,17 @@ def pwr_f2_test(
 
     Parameters
     ----------
-    u: int, default=None
+    u : int, default=None
         Degrees of freedom for the numerator
-    v: int, default=None
+    v : int, default=None
         Degrees of freedom for the denominator
-    f2: float, default=None
+    f2 : float, default=None
         Effect size
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -402,17 +402,17 @@ def pwr_norm_test(
 
     Parameters
     ----------
-    d: float, default=None
+    d : float, default=None
         Effect size
-    n: int, default=None
+    n : int, default=None
         Number of observations
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -473,17 +473,17 @@ def pwr_p_test(
 
     Parameters
     ----------
-    h: float, default=None
+    h : float, default=None
         Effect size
-    n: int, default=None
+    n : int, default=None
         Number of observations
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -544,17 +544,17 @@ def pwr_r_test(
 
     Parameters
     ----------
-    n: int, default=None
+    n : int, default=None
         Number of observations
-    r: float, default=none
+    r : float, default=none
         Linear correlation coefficient
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -616,19 +616,19 @@ def pwr_t_test(
 
     Parameters
     ----------
-    n: int, default=None
+    n : int, default=None
         Number of observations (per sample)
-    d: float, default=None
+    d : float, default=None
         Effect size (Cohen’s d) - difference between the means divided by the pooled standard deviation
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    test_type: {'two-sample', 'one-sample', 'paired'}
+    test_type : {'two-sample', 'one-sample', 'paired'}
         Type of t-test: One sample, two sample or paired sample
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
@@ -714,19 +714,19 @@ def pwr_t2n_test(
 
     Parameters
     ----------
-    n1: int, default=None
+    n1 : int, default=None
         Number of observations in the first sample
-    n2: int, default=None
+    n2 : int, default=None
         Number of observations in the second sample
-    d: float, default=None
+    d : float, default=None
         Effect size
-    sig_level: float, default=None
+    sig_level : float, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power: float, default=None
+    power : float, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative: {'two-sided', 'greater', 'less'}
+    alternative : {'two-sided', 'greater', 'less'}
         A character string specifying the alternative hypothesis
-    print_pretty: bool, default=True
+    print_pretty : bool, default=True
         Whether we wish to print the results in a pretty format or not
 
     Returns
