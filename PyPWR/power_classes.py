@@ -1353,7 +1353,7 @@ class pwr_t2n(pwr_2n):
             elif self.alternative == "greater":
                 self.effect_size = brentq(self._get_effect_size, -3, 10)
             else:
-                self.effect_size = brentq(self._get_effect_size, -10, 3)
+                self.effect_size = brentq(self._get_effect_size, -10, 2)
         elif self.n1 is None:
             self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
         elif self.n2 is None:
