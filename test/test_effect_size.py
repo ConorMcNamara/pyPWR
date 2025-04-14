@@ -1,6 +1,6 @@
 import pytest
 
-from PyPWR.src import effect_size
+from PyPWR import effect_size
 
 
 class Test_EffectSize:
