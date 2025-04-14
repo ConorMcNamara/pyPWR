@@ -5,13 +5,13 @@ sample size, effect size or significance level of a wide array of statistical
 tests.
 """
 
-from effect_size import (
+from PyPWR.effect_size import (
     es_h,
     es_w1,
     es_w2,
     cohen_es,
 )
-from pwr_tests import (
+from PyPWR.pwr_tests import (
     pwr_2p_test,
     pwr_2p2n_test,
     pwr_anova_test,
