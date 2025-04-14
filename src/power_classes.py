@@ -522,7 +522,7 @@ class pwr_anova:
                 f_dist.isf(self.sig_level, self.k - 1, (n - 1) * self.k),
                 self.k - 1,
                 (n - 1) * self.k,
-                l,
+                l_var,
             )
             - self.power
         )
