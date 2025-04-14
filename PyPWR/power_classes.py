@@ -157,7 +157,7 @@ class pwr_2n(abc.ABC):
             elif self.alternative == "greater":
                 self.effect_size = brentq(self._get_effect_size, -5, 10)
             else:
-                self.effect_size = brentq(self._get_effect_size, -10, 4)
+                self.effect_size = brentq(self._get_effect_size, -10, 5)
         elif self.n1 is None:
             self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
         elif self.n2 is None:
@@ -1343,3 +1343,41 @@ class pwr_t2n(pwr_2n):
                 - self.power
             )
         return sig_level
+
+    def pwr_test(self) -> Dict:
+        if self.power is None:
+            self.power = self._get_power()
+        elif self.effect_size is None:
+            if self.alternative == "two-sided":
+                self.effect_size = brentq(self._get_effect_size, 1e-10, 10)
+            elif self.alternative == "greater":
+                self.effect_size = brentq(self._get_effect_size, -3, 10)
+            else:
+                self.effect_size = brentq(self._get_effect_size, -10, 3)
+        elif self.n1 is None:
+            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
+        elif self.n2 is None:
+            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 500))
+        else:
+            self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
+        if self.note is not None:
+            return {
+                "effect_size": self.effect_size,
+                "n1": self.n1,
+                "n2": self.n2,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": self.method,
+                "note": "Different sample sizes",
+            }
+        else:
+            return {
+                "effect_size": self.effect_size,
+                "n1": self.n1,
+                "n2": self.n2,
+                "sig_level": self.sig_level,
+                "power": self.power,
+                "alternative": self.alternative,
+                "method": self.method
+            }
