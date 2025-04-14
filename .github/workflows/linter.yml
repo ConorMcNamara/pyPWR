@@ -50,7 +50,9 @@ jobs:
         run: |
           git fetch origin
           if git branch -r | grep -q "origin/auto-format-code"; then
-            git push origin --delete auto-format-code
+            set +e  # Allow the script to continue even if this command fails
+            git push origin --delete auto-format-code || echo "Branch deletion failed. It may not exist or is locked."
+            set -e  # Re-enable strict error checking
           fi
 
       - name: Create Pull Request
@@ -94,7 +96,9 @@ jobs:
         run: |
           git fetch origin
           if git branch -r | grep -q "origin/generate-docstrings"; then
-            git push origin --delete generate-docstrings
+            set +e  # Allow the script to continue even if this command fails
+            git push origin --delete generate-docstrings || echo "Branch deletion failed. It may not exist or is locked."
+            set -e  # Re-enable strict error checking
           fi
 
       - name: Create Pull Request
