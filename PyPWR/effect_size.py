@@ -10,9 +10,9 @@ def es_h(p1: float, p2: float) -> float:
 
     Parameters
     ----------
-    p1: float
+    p1 : float
         First proportion
-    p2: float
+    p2 : float
         Second proportion
 
     Returns
@@ -27,9 +27,9 @@ def es_w1(p0: Union[npt.ArrayLike, Sequence], p1: Union[npt.ArrayLike, Sequence]
 
     Parameters
     ----------
-    p0: array-like
+    p0 : array-like
         First set of k probabilities
-    p1: array-like
+    p1 : array-like
         Second set of k probabilities
 
     Returns
@@ -45,7 +45,7 @@ def es_w2(p: Union[Sequence, npt.ArrayLike]) -> float:
 
     Parameters
     ----------
-    p: 2x2 array
+    p : 2x2 array
         A two-way probability table
 
     Returns
@@ -63,9 +63,9 @@ def cohen_es(test: str = "p", size: str = "small") -> Dict:
 
     Parameters
     ----------
-    test: {'p', 't', 'r', 'anov', 'chisq', 'f2'}
+    test : {'p', 't', 'r', 'anov', 'chisq', 'f2'}
         The statistical test of interest
-    size: {'small', 'medium', 'large'}
+    size : {'small', 'medium', 'large'}
         The effect size
 
     Returns
