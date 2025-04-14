@@ -18,7 +18,7 @@ class pwr_1n(abc.ABC):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Abstract class for any test that involves one combined sample size
+        """Abstract class for any test that involves one combined sample size.
 
         Parameters
         ----------
@@ -88,7 +88,7 @@ class pwr_1n(abc.ABC):
                 "sig_level": self.sig_level,
                 "power": self.power,
                 "alternative": self.alternative,
-                "method": self.method
+                "method": self.method,
             }
 
 
@@ -102,7 +102,7 @@ class pwr_2n(abc.ABC):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Abstract class for any test that involves two different sample sizes
+        """Abstract class for any test that involves two different sample sizes.
 
         Parameters
         ----------
@@ -183,7 +183,7 @@ class pwr_2n(abc.ABC):
                 "sig_level": self.sig_level,
                 "power": self.power,
                 "alternative": self.alternative,
-                "method": self.method
+                "method": self.method,
             }
 
 
@@ -196,7 +196,7 @@ class pwr_2p(pwr_1n):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a test with two proportions but the same sample size
+        """Class for handling a test with two proportions but the same sample size.
 
         Parameters
         ----------
@@ -295,7 +295,7 @@ class pwr_2p2n(pwr_2n):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a test with two proportions and two different sample sizes
+        """Class for handling a test with two proportions and two different sample sizes.
 
         Parameters
         ----------
@@ -469,7 +469,7 @@ class pwr_anova:
         sig_level: Optional[float],
         power: Optional[float],
     ):
-        """Class for handling a balanced one-way analysis of variance tests
+        """Class for handling a balanced one-way analysis of variance tests.
 
         Parameters
         ----------
@@ -585,7 +585,7 @@ class pwr_chisq:
         sig_level: Optional[float],
         power: Optional[float],
     ):
-        """Class for handling a chi-squared test
+        """Class for handling a chi-squared test.
 
         Parameters
         ----------
@@ -657,7 +657,7 @@ class pwr_f2:
         sig_level: Optional[float],
         power: Optional[float],
     ) -> None:
-        """Class for handling a general linear model
+        """Class for handling a general linear model.
 
         Parameters
         ----------
@@ -681,7 +681,9 @@ class pwr_f2:
 
     def _get_power(self) -> float:
         l_var = self.f2 * (self.u + self.v + 1)
-        power = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var)
+        power = ncf.sf(
+            f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var
+        )
         return power
 
     def _get_u(self, u: int) -> float:
@@ -727,7 +729,7 @@ class pwr_f2:
             "effect_size": self.f2,
             "sig_level": self.sig_level,
             "power": self.power,
-            "method": self.method
+            "method": self.method,
         }
 
 
@@ -740,7 +742,7 @@ class pwr_norm(pwr_1n):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling the mean of a normal distribution with known variance
+        """Class for handling the mean of a normal distribution with known variance.
 
         Parameters
         ----------
@@ -839,7 +841,7 @@ class pwr_p(pwr_norm):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a one-sample proportion test
+        """Class for handling a one-sample proportion test.
 
         Parameters
         ----------
@@ -868,7 +870,7 @@ class pwr_r(pwr_1n):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a test of correlations
+        """Class for handling a test of correlations.
 
         Parameters
         ----------
@@ -1002,7 +1004,7 @@ class pwr_t:
         type: str = "two-sample",
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a t-test of means
+        """Class for handling a t-test of means.
 
         Parameters
         ----------
@@ -1169,7 +1171,7 @@ class pwr_t:
                 "sig_level": self.sig_level,
                 "power": self.power,
                 "alternative": self.alternative,
-                "method": "{} t test power calculation".format(self.method)
+                "method": "{} t test power calculation".format(self.method),
             }
 
 
@@ -1183,7 +1185,7 @@ class pwr_t2n(pwr_2n):
         power: Optional[float],
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a two-sample t-test of means
+        """Class for handling a two-sample t-test of means.
 
         Parameters
         ----------
@@ -1379,5 +1381,5 @@ class pwr_t2n(pwr_2n):
                 "sig_level": self.sig_level,
                 "power": self.power,
                 "alternative": self.alternative,
-                "method": self.method
+                "method": self.method,
             }
