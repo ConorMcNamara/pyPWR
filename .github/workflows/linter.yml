@@ -52,6 +52,7 @@ jobs:
           if git branch -r | grep -q "origin/auto-format-code"; then
             set +e  # Allow the script to continue even if this command fails
             git push origin --delete auto-format-code || echo "Branch deletion failed. It may not exist or is locked."
+            git remote prune origin  # Clean up remote-tracking references
             set -e  # Re-enable strict error checking
           fi
 
