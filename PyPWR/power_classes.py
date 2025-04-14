@@ -1353,9 +1353,9 @@ class pwr_t2n(pwr_2n):
             if self.alternative == "two-sided":
                 self.effect_size = brentq(self._get_effect_size, 1e-10, 10)
             elif self.alternative == "greater":
-                self.effect_size = brentq(self._get_effect_size, -3, 10)
+                self.effect_size = brentq(self._get_effect_size, -1, 10)
             else:
-                self.effect_size = brentq(self._get_effect_size, -10, 2)
+                self.effect_size = brentq(self._get_effect_size, -10, 1)
         elif self.n1 is None:
             self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
         elif self.n2 is None:
