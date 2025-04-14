@@ -493,30 +493,30 @@ class pwr_anova:
         self.note = "n is number in each group"
 
     def _get_power(self) -> float:
-        l = self.k * self.n * pow(self.f, 2)
+        l_var = self.k * self.n * pow(self.f, 2)
         power = ncf.sf(
             f_dist.isf(self.sig_level, self.k - 1, (self.n - 1) * self.k),
             self.k - 1,
             (self.n - 1) * self.k,
-            l,
+            l_var,
         )
         return power
 
     def _get_k(self, k: int) -> float:
-        l = k * self.n * pow(self.f, 2)
+        l_var = k * self.n * pow(self.f, 2)
         k = (
             ncf.sf(
                 f_dist.isf(self.sig_level, k - 1, (self.n - 1) * k),
                 k - 1,
                 (self.n - 1) * k,
-                l,
+                l_var,
             )
             - self.power
         )
         return k
 
     def _get_n(self, n: int) -> float:
-        l = self.k * n * pow(self.f, 2)
+        l_var = self.k * n * pow(self.f, 2)
         n = (
             ncf.sf(
                 f_dist.isf(self.sig_level, self.k - 1, (n - 1) * self.k),
@@ -529,26 +529,26 @@ class pwr_anova:
         return n
 
     def _get_effect_size(self, f: float) -> float:
-        l = self.k * self.n * pow(f, 2)
+        l_var = self.k * self.n * pow(f, 2)
         f = (
             ncf.sf(
                 f_dist.isf(self.sig_level, self.k - 1, (self.n - 1) * self.k),
                 self.k - 1,
                 (self.n - 1) * self.k,
-                l,
+                l_var,
             )
             - self.power
         )
         return f
 
     def _get_sig_level(self, sig_level: float) -> float:
-        l = self.k * self.n * pow(self.f, 2)
+        l_var = self.k * self.n * pow(self.f, 2)
         sig_level = (
             ncf.sf(
                 f_dist.isf(sig_level, self.k - 1, (self.n - 1) * self.k),
                 self.k - 1,
                 (self.n - 1) * self.k,
-                l,
+                l_var,
             )
             - self.power
         )
