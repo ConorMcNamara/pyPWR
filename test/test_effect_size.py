@@ -4,10 +4,9 @@ from PyPWR import effect_size
 
 
 class Test_EffectSize:
-
     @staticmethod
     def test_cohenes_result() -> None:
-        actual = effect_size.cohen_es('r', 'medium')
+        actual = effect_size.cohen_es("r", "medium")
         # cohen.ES(test="r", size="medium")
         #
         #      Conventional effect size from Cohen (1982)
@@ -16,7 +15,7 @@ class Test_EffectSize:
         #            size = medium
         #     effect.size = 0.3
         expected = 0.3
-        assert actual['effect_size'] == pytest.approx(expected)
+        assert actual["effect_size"] == pytest.approx(expected)
 
     @staticmethod
     def test_esh_result() -> None:
@@ -28,8 +27,8 @@ class Test_EffectSize:
 
     @staticmethod
     def test_esw1_result() -> None:
-        p0 = [1/4] * 4
-        p1 = [3/8] + [(5/8) / 3] * 3
+        p0 = [1 / 4] * 4
+        p1 = [3 / 8] + [(5 / 8) / 3] * 3
         actual = effect_size.es_w1(p0, p1)
         # P0<-rep(1/4,4)
         # P1<-c(0.375,rep((1-0.375)/3,3))
