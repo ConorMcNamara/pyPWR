@@ -977,3 +977,6 @@ class Test_T2N:
         #     alternative = greater
         expected = 0.2146133
         assert s_results['sig_level'] == pytest.approx(expected, 0.0001)
+
+if __name__ == "__main__":
+    pytest.main()
