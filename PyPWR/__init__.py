@@ -1,8 +1,7 @@
-"""Method for calculating the power of multiple statistical tests
+"""Method for calculating the power of multiple statistical tests.
 
-This library contains functionality for calculating the power,
-sample size, effect size or significance level of a wide array of statistical
-tests.
+This library contains functionality for calculating the power, sample size, effect size or significance level of a wide
+array of statistical tests.
 """
 
 from PyPWR.effect_size import (

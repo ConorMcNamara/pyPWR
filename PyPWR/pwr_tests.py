@@ -250,7 +250,7 @@ def pwr_chisq_test(
     df: int = 1,
     sig_level: Optional[float] = None,
     power: Optional[float] = None,
-    print_pretty: bool = True
+    print_pretty: bool = True,
 ) -> Dict:
     """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
 
