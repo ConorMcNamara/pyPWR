@@ -215,19 +215,13 @@ class pwr_2p(pwr_1n):
 
     def _get_power(self) -> float:
         if self.alternative == "two-sided":
-            power = norm.sf(
-                norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n / 2)
-            ) + norm.cdf(
+            power = norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n / 2)) + norm.cdf(
                 norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n / 2)
             )
         elif self.alternative == "greater":
-            power = norm.sf(
-                norm.isf(self.sig_level) - self.effect_size * sqrt(self.n / 2)
-            )
+            power = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(self.n / 2))
         else:
-            power = norm.cdf(
-                norm.ppf(self.sig_level) - self.effect_size * sqrt(self.n / 2)
-            )
+            power = norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(self.n / 2))
         return power
 
     def _get_effect_size(self, h: float) -> float:
@@ -247,41 +241,26 @@ class pwr_2p(pwr_1n):
         if self.alternative == "two-sided":
             n = (
                 norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(n / 2))
-                + norm.cdf(
-                    norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(n / 2)
-                )
+                + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(n / 2))
                 - self.power
             )
         elif self.alternative == "greater":
-            n = (
-                norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n / 2))
-                - self.power
-            )
+            n = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n / 2)) - self.power
         else:
-            n = (
-                norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n / 2))
-                - self.power
-            )
+            n = norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n / 2)) - self.power
         return n
 
     def _get_sig_level(self, sig_level: float) -> float:
         if self.alternative == "two-sided":
             sig_level = (
                 norm.sf(norm.isf(sig_level / 2) - self.effect_size * sqrt(self.n / 2))
-                + norm.cdf(
-                    norm.ppf(sig_level / 2) - self.effect_size * sqrt(self.n / 2)
-                )
+                + norm.cdf(norm.ppf(sig_level / 2) - self.effect_size * sqrt(self.n / 2))
                 - self.power
             )
         elif self.alternative == "greater":
-            sig_level = (
-                norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n / 2))
-                - self.power
-            )
+            sig_level = norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n / 2)) - self.power
         else:
-            sig_level = (
-                norm.cdf(norm.ppf(sig_level) - self.h * sqrt(self.n / 2)) - self.power
-            )
+            sig_level = norm.cdf(norm.ppf(sig_level) - self.h * sqrt(self.n / 2)) - self.power
         return sig_level
 
 
@@ -317,144 +296,76 @@ class pwr_2p2n(pwr_2n):
     def _get_power(self) -> float:
         if self.alternative == "two-sided":
             power = norm.sf(
-                norm.isf(self.sig_level / 2)
-                - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
+                norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
             ) + norm.cdf(
-                norm.ppf(self.sig_level / 2)
-                - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
+                norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
             )
         elif self.alternative == "greater":
-            power = norm.sf(
-                norm.isf(self.sig_level)
-                - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-            )
+            power = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
         else:
             power = norm.cdf(
-                norm.ppf(self.sig_level)
-                - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
+                norm.ppf(self.sig_level) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
             )
         return power
 
     def _get_effect_size(self, h: float) -> float:
         if self.alternative == "two-sided":
             h = (
-                norm.sf(
-                    norm.isf(self.sig_level / 2)
-                    - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
-                + norm.cdf(
-                    norm.ppf(self.sig_level / 2)
-                    - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
+                norm.sf(norm.isf(self.sig_level / 2) - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
+                + norm.cdf(norm.ppf(self.sig_level / 2) - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
                 - self.power
             )
         elif self.alternative == "greater":
-            h = (
-                norm.sf(
-                    norm.isf(self.sig_level)
-                    - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
-                - self.power
-            )
+            h = norm.sf(norm.isf(self.sig_level) - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))) - self.power
         else:
-            h = (
-                norm.cdf(
-                    norm.ppf(self.sig_level)
-                    - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
-                - self.power
-            )
+            h = norm.cdf(norm.ppf(self.sig_level) - h * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))) - self.power
         return h
 
     def _get_n1(self, n1: int) -> float:
         if self.alternative == "two-sided":
             n1 = (
-                norm.sf(
-                    norm.isf(self.sig_level / 2)
-                    - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2))
-                )
-                + norm.cdf(
-                    norm.ppf(self.sig_level / 2)
-                    - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2))
-                )
+                norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2)))
+                + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2)))
                 - self.power
             )
         elif self.alternative == "greater":
-            n1 = (
-                norm.sf(
-                    norm.isf(self.sig_level)
-                    - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2))
-                )
-                - self.power
-            )
+            n1 = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2))) - self.power
         else:
             n1 = (
-                norm.cdf(
-                    norm.ppf(self.sig_level)
-                    - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2))
-                )
-                - self.power
+                norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n1 * self.n2 / (n1 + self.n2))) - self.power
             )
         return n1
 
     def _get_n2(self, n2: int) -> float:
         if self.alternative == "two-sided":
             n2 = (
-                norm.sf(
-                    norm.isf(self.sig_level / 2)
-                    - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2))
-                )
-                + norm.cdf(
-                    norm.ppf(self.sig_level / 2)
-                    - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2))
-                )
+                norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2)))
+                + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2)))
                 - self.power
             )
         elif self.alternative == "greater":
-            n2 = (
-                norm.sf(
-                    norm.isf(self.sig_level)
-                    - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2))
-                )
-                - self.power
-            )
+            n2 = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2))) - self.power
         else:
             n2 = (
-                norm.cdf(
-                    norm.ppf(self.sig_level)
-                    - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2))
-                )
-                - self.power
+                norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(self.n1 * n2 / (self.n1 + n2))) - self.power
             )
         return n2
 
     def _get_sig_level(self, sig_level: float) -> float:
         if self.alternative == "two-sided":
             sig_level = (
-                norm.sf(
-                    norm.isf(sig_level / 2)
-                    - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
-                + norm.cdf(
-                    norm.ppf(sig_level / 2)
-                    - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
+                norm.sf(norm.isf(sig_level / 2) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
+                + norm.cdf(norm.ppf(sig_level / 2) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
                 - self.power
             )
         elif self.alternative == "greater":
             sig_level = (
-                norm.sf(
-                    norm.isf(sig_level)
-                    - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
+                norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
                 - self.power
             )
         else:
             sig_level = (
-                norm.cdf(
-                    norm.ppf(sig_level)
-                    - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2))
-                )
+                norm.cdf(norm.ppf(sig_level) - self.effect_size * sqrt(self.n1 * self.n2 / (self.n1 + self.n2)))
                 - self.power
             )
         return sig_level
@@ -681,9 +592,7 @@ class pwr_f2:
 
     def _get_power(self) -> float:
         l_var = self.f2 * (self.u + self.v + 1)
-        power = ncf.sf(
-            f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var
-        )
+        power = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var)
         return power
 
     def _get_u(self, u: int) -> float:
@@ -698,18 +607,12 @@ class pwr_f2:
 
     def _get_effect_size(self, f2: float) -> float:
         l_var = f2 * (self.u + self.v + 1)
-        f2 = (
-            ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var)
-            - self.power
-        )
+        f2 = ncf.sf(f_dist.isf(self.sig_level, self.u, self.v), self.u, self.v, l_var) - self.power
         return f2
 
     def _get_sig_level(self, sig_level: float) -> float:
         l_var = self.f2 * (self.u + self.v + 1)
-        sig_level = (
-            ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l_var)
-            - self.power
-        )
+        sig_level = ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l_var) - self.power
         return sig_level
 
     def pwr_test(self) -> Dict:
@@ -758,16 +661,14 @@ class pwr_norm(pwr_1n):
             A character string specifying our alternative hypothesis
         """
         super().__init__(d, n, sig_level, power, alternative)
-        self.method = (
-            "Mean power calculation for normal distribution with known variance"
-        )
+        self.method = "Mean power calculation for normal distribution with known variance"
         self.note = None
 
     def _get_power(self) -> float:
         if self.alternative == "two-sided":
-            power = norm.sf(
-                norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n)
-            ) + norm.cdf(norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n))
+            power = norm.sf(norm.isf(self.sig_level / 2) - self.effect_size * sqrt(self.n)) + norm.cdf(
+                norm.ppf(self.sig_level / 2) - self.effect_size * sqrt(self.n)
+            )
         elif self.alternative == "greater":
             power = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(self.n))
         else:
@@ -782,15 +683,9 @@ class pwr_norm(pwr_1n):
                 - self.power
             )
         elif self.alternative == "greater":
-            effect_size = (
-                norm.sf(norm.isf(self.sig_level) - effect_size * sqrt(self.n))
-                - self.power
-            )
+            effect_size = norm.sf(norm.isf(self.sig_level) - effect_size * sqrt(self.n)) - self.power
         else:
-            effect_size = (
-                norm.cdf(norm.ppf(self.sig_level) - effect_size * sqrt(self.n))
-                - self.power
-            )
+            effect_size = norm.cdf(norm.ppf(self.sig_level) - effect_size * sqrt(self.n)) - self.power
         return effect_size
 
     def _get_n(self, n: int) -> float:
@@ -801,15 +696,9 @@ class pwr_norm(pwr_1n):
                 - self.power
             )
         elif self.alternative == "greater":
-            n = (
-                norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n))
-                - self.power
-            )
+            n = norm.sf(norm.isf(self.sig_level) - self.effect_size * sqrt(n)) - self.power
         else:
-            n = (
-                norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n))
-                - self.power
-            )
+            n = norm.cdf(norm.ppf(self.sig_level) - self.effect_size * sqrt(n)) - self.power
         return n
 
     def _get_sig_level(self, sig_level: float) -> float:
@@ -820,15 +709,9 @@ class pwr_norm(pwr_1n):
                 - self.power
             )
         elif self.alternative == "greater":
-            sig_level = (
-                norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n))
-                - self.power
-            )
+            sig_level = norm.sf(norm.isf(sig_level) - self.effect_size * sqrt(self.n)) - self.power
         else:
-            sig_level = (
-                norm.cdf(norm.ppf(sig_level) - self.effect_size * sqrt(self.n))
-                - self.power
-            )
+            sig_level = norm.cdf(norm.ppf(sig_level) - self.effect_size * sqrt(self.n)) - self.power
         return sig_level
 
 
@@ -886,9 +769,7 @@ class pwr_r(pwr_1n):
             A character string specifying our alternative hypothesis
         """
         super().__init__(r, n, sig_level, power, alternative)
-        self.method = (
-            "Approximate correlation power calculation (arctanh transformation)"
-        )
+        self.method = "Approximate correlation power calculation (arctanh transformation)"
         self.note = None
 
     def _get_power(self) -> float:
@@ -904,9 +785,7 @@ class pwr_r(pwr_1n):
         zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
-            power = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf(
-                (-zr - zrc) * sqrt(self.n - 3)
-            )
+            power = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf((-zr - zrc) * sqrt(self.n - 3))
         else:
             power = norm.cdf((zr - zrc) * sqrt(self.n - 3))
         return power
@@ -924,9 +803,7 @@ class pwr_r(pwr_1n):
         zrc = atanh(rc)
         if self.alternative == "two-sided":
             effect_size = (
-                norm.cdf((zr - zrc) * sqrt(self.n - 3))
-                + norm.cdf((-zr - zrc) * sqrt(self.n - 3))
-                - self.power
+                norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf((-zr - zrc) * sqrt(self.n - 3)) - self.power
             )
         else:
             effect_size = norm.cdf((zr - zrc) * sqrt(self.n - 3)) - self.power
@@ -944,11 +821,7 @@ class pwr_r(pwr_1n):
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + n - 2))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
-            n = (
-                norm.cdf((zr - zrc) * sqrt(n - 3))
-                + norm.cdf((-zr - zrc) * sqrt(n - 3))
-                - self.power
-            )
+            n = norm.cdf((zr - zrc) * sqrt(n - 3)) + norm.cdf((-zr - zrc) * sqrt(n - 3)) - self.power
         else:
             n = norm.cdf((zr - zrc) * sqrt(n - 3)) - self.power
         return n
@@ -963,11 +836,7 @@ class pwr_r(pwr_1n):
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
-            sig_level = (
-                norm.cdf((zr - zrc) * sqrt(self.n - 3))
-                + norm.cdf((-zr - zrc) * sqrt(self.n - 3))
-                - self.power
-            )
+            sig_level = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf((-zr - zrc) * sqrt(self.n - 3)) - self.power
         else:
             sig_level = norm.cdf((zr - zrc) * sqrt(self.n - 3)) - self.power
         return sig_level
@@ -1100,19 +969,9 @@ class pwr_t:
                 - self.power
             )
         elif self.alternative == "greater":
-            n = (
-                nct.sf(
-                    t_dist.isf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d
-                )
-                - self.power
-            )
+            n = nct.sf(t_dist.isf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d) - self.power
         else:
-            n = (
-                nct.cdf(
-                    t_dist.ppf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d
-                )
-                - self.power
-            )
+            n = nct.cdf(t_dist.ppf(self.sig_level, nu), nu, sqrt(n / self.t_sample) * self.d) - self.power
         return n
 
     def _get_sig_level(self, sig_level: float) -> float:
@@ -1125,19 +984,9 @@ class pwr_t:
                 - self.power
             )
         elif self.alternative == "greater":
-            sig_level = (
-                nct.sf(
-                    t_dist.isf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d
-                )
-                - self.power
-            )
+            sig_level = nct.sf(t_dist.isf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d) - self.power
         else:
-            sig_level = (
-                nct.cdf(
-                    t_dist.ppf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d
-                )
-                - self.power
-            )
+            sig_level = nct.cdf(t_dist.ppf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d) - self.power
         return sig_level
 
     def pwr_test(self) -> Dict:
@@ -1209,9 +1058,7 @@ class pwr_t2n(pwr_2n):
         nu = self.n1 + self.n2 - 2
         if self.alternative == "two-sided":
             qu = t_dist.isf(self.sig_level / 2, nu)
-            power = nct.sf(
-                qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
-            ) + nct.cdf(
+            power = nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))) + nct.cdf(
                 -qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
             )
         elif self.alternative == "greater":
@@ -1321,9 +1168,7 @@ class pwr_t2n(pwr_2n):
             qu = t_dist.isf(sig_level / 2, nu)
             sig_level = (
                 nct.sf(qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
-                + nct.cdf(
-                    -qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2))
-                )
+                + nct.cdf(-qu, nu, self.effect_size * (1 / sqrt(1 / self.n1 + 1 / self.n2)))
                 - self.power
             )
         elif self.alternative == "greater":
