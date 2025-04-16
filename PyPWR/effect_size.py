@@ -22,9 +22,7 @@ def es_h(p1: float, p2: float) -> float:
     return 2 * asin(sqrt(p1)) - 2 * asin(sqrt(p2))
 
 
-def es_w1(
-    p0: Union[npt.ArrayLike, Sequence], p1: Union[npt.ArrayLike, Sequence]
-) -> float:
+def es_w1(p0: Union[npt.ArrayLike, Sequence], p1: Union[npt.ArrayLike, Sequence]) -> float:
     """Compute effect size w for two sets of k probabilities P0 (null hypothesis) and P1 (alternative hypothesis)
 
     Parameters

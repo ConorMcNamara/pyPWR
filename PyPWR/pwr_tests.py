@@ -124,9 +124,7 @@ def pwr_2p2n_test(
     if n1 is not None and n1 < 2:
         raise ValueError("Number of observations in the first group must be at least 2")
     if n2 is not None and n2 < 2:
-        raise ValueError(
-            "Number of observations in the second group must be at least 2"
-        )
+        raise ValueError("Number of observations in the second group must be at least 2")
     if sig_level is not None and (sig_level < 0 or sig_level > 1):
         raise ValueError("sig_level must be between 0 and 1")
     if power is not None and (power < 0 or power > 1):
@@ -740,9 +738,7 @@ def pwr_t2n_test(
     if n1 is not None and n1 < 2:
         raise ValueError("Number of observations in the first group must be at least 2")
     if n2 is not None and n2 < 2:
-        raise ValueError(
-            "Number of observations in the second group must be at least 2"
-        )
+        raise ValueError("Number of observations in the second group must be at least 2")
     if sig_level is not None and (sig_level < 0 or sig_level > 1):
         raise ValueError("sig_level must be between 0 and 1")
     if power is not None and (power < 0 or power > 1):
