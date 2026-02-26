@@ -350,7 +350,7 @@ ruff format . && ruff check . && mypy PyPWR && pytest --cov=PyPWR
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU License for compatibility with the pwr package  - see the [LICENSE](LICENSE) file for details.
 
 ## References
 
