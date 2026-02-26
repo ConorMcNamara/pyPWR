@@ -57,6 +57,13 @@ Documentation = "https://github.com/ConorMcNamara/pyPWR#readme"
 requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry]
+name = "pypwr"
+version = "1.0.0"
+description = "A Python package for assessing the power of multiple statistical tests."
+authors = ["ConorMcNamara <conor.s.mcnamara@gmail.com>"]
+packages = [{include = "PyPWR"}]
+
 [tool.ruff]
 line-length = 120
 indent-width = 4
