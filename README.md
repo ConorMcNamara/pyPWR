@@ -1,6 +1,7 @@
 # pyPWR
 
 [![CI](https://github.com/ConorMcNamara/pyPWR/actions/workflows/ci.yml/badge.svg)](https://github.com/ConorMcNamara/pyPWR/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/ConorMcNamara/pyPWR/branch/main/graph/badge.svg)](https://codecov.io/gh/ConorMcNamara/pyPWR)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
@@ -281,6 +282,30 @@ pyPWR uses SciPy's `brentq` and `bisect` for root-finding, while R's pwr uses `u
 
 The package includes full type hints (PEP 484/585) and a `py.typed` marker for excellent IDE support and static type checking.
 
+## Code Coverage
+
+pyPWR maintains high test coverage (>85%) to ensure reliability and correctness. Coverage reports are automatically generated for each commit and uploaded to [Codecov](https://codecov.io/gh/ConorMcNamara/pyPWR).
+
+### Coverage Breakdown
+
+- **PyPWR/__init__.py**: Public API exports
+- **PyPWR/effect_size.py**: Effect size calculation functions
+- **PyPWR/power_classes.py**: Core power calculation classes
+- **PyPWR/pwr_tests.py**: User-facing test functions (>98% coverage)
+
+### Viewing Coverage Reports
+
+```bash
+# Run tests with coverage
+pytest test/ --cov=PyPWR --cov-report=term-missing
+
+# Generate interactive HTML report
+pytest test/ --cov=PyPWR --cov-report=html
+open htmlcov/index.html  # macOS
+# or: xdg-open htmlcov/index.html  # Linux
+# or: start htmlcov/index.html     # Windows
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
@@ -296,7 +321,15 @@ pip install -e ".[dev]"  # Install with development dependencies
 ### Running Tests
 
 ```bash
+# Run tests
 pytest test/ -v
+
+# Run tests with coverage report
+pytest test/ -v --cov=PyPWR --cov-report=term-missing
+
+# Generate HTML coverage report
+pytest test/ --cov=PyPWR --cov-report=html
+# Open htmlcov/index.html in your browser
 ```
 
 ### Code Quality
@@ -310,6 +343,9 @@ ruff check .
 
 # Type check
 mypy PyPWR
+
+# Run all checks (formatting, linting, type checking, tests with coverage)
+ruff format . && ruff check . && mypy PyPWR && pytest --cov=PyPWR
 ```
 
 ## License

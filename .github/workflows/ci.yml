@@ -79,10 +79,21 @@ jobs:
           pip install ".[dev]"
         shell: bash
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
           pytest test/ -v
         shell: bash
+
+      - name: Upload coverage reports to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   auto-format:
     name: Auto-format Code
