@@ -740,7 +740,7 @@ def pwr_t_test(
         raise ValueError("power must be between 0 and 1")
     pwr = pwr_t(n, d, sig_level, power, test_type, alternative).pwr_test()
     if print_pretty:
-        if "note" in pwr.keys():
+        if "note" in pwr:
             str_print = (
                 "\t"
                 + pwr["method"]

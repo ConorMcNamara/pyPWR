@@ -87,7 +87,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"] # Unused imports in __init__.py are OK
+"__init__.py" = ["F401", "N999"] # Unused imports in __init__.py are OK, module name PyPWR is intentional
+"PyPWR/power_classes.py" = ["N801"] # Class names like pwr_2p intentionally match R's pwr library
+"test/*.py" = ["N801", "N802"] # Test class and method names follow pytest conventions
 
 [tool.mypy]
 python_version = "3.13"

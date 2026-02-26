@@ -9,8 +9,10 @@ import abc
 from math import atanh, sqrt
 
 import numpy as np
-from scipy.optimize import brentq, bisect
-from scipy.stats import chi2, f as f_dist, ncf, nct, ncx2, norm, t as t_dist
+from scipy.optimize import bisect, brentq
+from scipy.stats import chi2, ncf, nct, ncx2, norm
+from scipy.stats import f as f_dist
+from scipy.stats import t as t_dist
 
 
 class pwr_1n(abc.ABC):
@@ -850,10 +852,7 @@ class pwr_r(pwr_1n):
     def _get_power(self) -> float:
         if self.alternative == "less":
             self.effect_size *= -1
-        if self.alternative == "two-sided":
-            sig_level = self.sig_level / 2
-        else:
-            sig_level = self.sig_level
+        sig_level = self.sig_level / 2 if self.alternative == "two-sided" else self.sig_level
         ttt = t_dist.isf(sig_level, df=self.n - 2)
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
         zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
@@ -867,10 +866,7 @@ class pwr_r(pwr_1n):
     def _get_effect_size(self, effect_size: float) -> float:
         if self.alternative == "less":
             effect_size *= -1
-        if self.alternative == "two-sided":
-            sig_level = self.sig_level / 2
-        else:
-            sig_level = self.sig_level
+        sig_level = self.sig_level / 2 if self.alternative == "two-sided" else self.sig_level
         ttt = t_dist.isf(sig_level, df=self.n - 2)
         zr = atanh(effect_size) + effect_size / (2 * (self.n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
@@ -886,10 +882,7 @@ class pwr_r(pwr_1n):
     def _get_n(self, n: int) -> float:
         if self.alternative == "less":
             self.effect_size *= -1
-        if self.alternative == "two-sided":
-            sig_level = self.sig_level / 2
-        else:
-            sig_level = self.sig_level
+        sig_level = self.sig_level / 2 if self.alternative == "two-sided" else self.sig_level
         ttt = t_dist.isf(sig_level, df=n - 2)
         zr = atanh(self.effect_size) + self.effect_size / (2 * (n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + n - 2))
@@ -1091,7 +1084,7 @@ class pwr_t:
                 "sig_level": self.sig_level,
                 "power": self.power,
                 "alternative": self.alternative,
-                "method": "{} t test power calculation".format(self.method),
+                "method": f"{self.method} t test power calculation",
                 "note": self.note,
             }
         else:
@@ -1101,7 +1094,7 @@ class pwr_t:
                 "sig_level": self.sig_level,
                 "power": self.power,
                 "alternative": self.alternative,
-                "method": "{} t test power calculation".format(self.method),
+                "method": f"{self.method} t test power calculation",
             }
 
 
