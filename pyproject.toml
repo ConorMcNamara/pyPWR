@@ -1,50 +1,114 @@
 [project]
 name = "pypwr"
 version = "1.0.0"
-description = "A Python package for assessing the power of multiple statiscal tests."
-readme-content-type = "text/markdown"
+description = "A Python package for assessing the power of multiple statistical tests."
+readme = "README.md"
 keywords = [
     "power analysis",
     "multiple testing",
     "statistical tests",
     "hypothesis testing",
-    "python package"
+    "python package",
+    "statistics",
+    "effect size"
 ]
+authors = [
+    {name = "ConorMcNamara", email = "conor.s.mcnamara@gmail.com"}
+]
+maintainers = [
+    {name = "ConorMcNamara", email = "conor.s.mcnamara@gmail.com"}
+]
+license = {text = "MIT"}
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "Topic :: Scientific/Engineering :: Information Analysis"
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed"
 ]
-authors = [
-    {name = "ConorMcNamara",email = "conor.s.mcnamara@gmail.com"}
-]
-readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
-    "pytest (>=8.3.5,<9.0.0)",
-    "numpy (>=2.2.4,<3.0.0)",
-    "scipy (>=1.15.2,<2.0.0)"
+    "numpy>=2.2.4,<3.0.0",
+    "scipy>=1.15.2,<2.0.0"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.8.0",
+    "mypy>=1.11.0",
+    "autopep8>=2.3.0",
+    "pydocstringformatter>=0.7.3"
+]
+
+[project.urls]
+Homepage = "https://github.com/ConorMcNamara/pyPWR"
+Repository = "https://github.com/ConorMcNamara/pyPWR"
+Issues = "https://github.com/ConorMcNamara/pyPWR/issues"
+Documentation = "https://github.com/ConorMcNamara/pyPWR#readme"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 120
 indent-width = 4
+target-version = "py313"
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "E501", # Line too long (handled by formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # Unused imports in __init__.py are OK
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_calls = false
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+strict_equality = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]

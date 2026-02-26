@@ -1,36 +1,46 @@
-import abc
+"""Power calculation classes for various statistical tests.
 
-from math import sqrt, atanh
-from typing import Optional, Dict
+This module provides abstract base classes and concrete implementations for
+calculating statistical power, sample size, effect size, or significance level
+for various hypothesis tests.
+"""
+
+import abc
+from math import atanh, sqrt
 
 import numpy as np
-
-from scipy.stats import norm, chi2, ncx2, ncf, nct, f as f_dist, t as t_dist
 from scipy.optimize import brentq, bisect
+from scipy.stats import chi2, f as f_dist, ncf, nct, ncx2, norm, t as t_dist
 
 
 class pwr_1n(abc.ABC):
+    """Abstract base class for power tests with one sample size parameter.
+
+    This class provides the common interface and logic for power calculations
+    that involve a single sample size (or equal sample sizes per group).
+    """
+
     def __init__(
         self,
-        effect_size: Optional[float],
-        n: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        effect_size: float | None,
+        n: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Abstract class for any test that involves one combined sample size.
+        """Initialize the power test with one sample size.
 
         Parameters
         ----------
-        effect_size : float
+        effect_size : float | None
             The effect size
-        n : int
+        n : int | None
             Number of observations (per sample)
-        sig_level : float
+        sig_level : float | None
             Significance level (Type I error probability). Must be between 0 and 1
-        power : float
+        power : float | None
             Power of test (1 minus Type II error probability). Must be between 0 and 1
-        alternative : {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
             A character string specifying the alternative hypothesis
         """
         self.effect_size = effect_size
@@ -39,25 +49,29 @@ class pwr_1n(abc.ABC):
         self.power = power
         self.alternative = alternative.casefold()
         self.method = "Difference of proportion power calculation for binomial distribution (arcsine transformation)"
-        self.note = "Same sample sizes"
+        self.note: str | None = "Same sample sizes"
 
     @abc.abstractmethod
-    def _get_power(self) -> None:
+    def _get_power(self) -> float:
+        """Calculate power given effect_size, n, and sig_level."""
         pass
 
     @abc.abstractmethod
-    def _get_effect_size(self, effect_size) -> None:
+    def _get_effect_size(self, effect_size: float) -> float:
+        """Calculate difference from target power for given effect_size."""
         pass
 
     @abc.abstractmethod
-    def _get_n(self, n) -> None:
+    def _get_n(self, n: int) -> float:
+        """Calculate difference from target power for given n."""
         pass
 
     @abc.abstractmethod
-    def _get_sig_level(self, sig_level) -> None:
+    def _get_sig_level(self, sig_level: float) -> float:
+        """Calculate difference from target power for given sig_level."""
         pass
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, float | int | str | None]:
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
@@ -93,30 +107,36 @@ class pwr_1n(abc.ABC):
 
 
 class pwr_2n(abc.ABC):
+    """Abstract base class for power tests with two different sample sizes.
+
+    This class provides the common interface and logic for power calculations
+    that involve two independent samples with potentially different sizes.
+    """
+
     def __init__(
         self,
-        effect_size: Optional[float],
-        n1: Optional[int],
-        n2: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        effect_size: float | None,
+        n1: int | None,
+        n2: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Abstract class for any test that involves two different sample sizes.
+        """Initialize the power test with two sample sizes.
 
         Parameters
         ----------
-        effect_size : float, default=None
+        effect_size : float | None
             The effect size
-        n1 : int, default=None
+        n1 : int | None
             Number of observations in the first sample
-        n2 : int, default=None
+        n2 : int | None
             Number of observations in the second sample
-        sig_level : float, default=None
+        sig_level : float | None
             Significance level (Type I error probability). Must be between 0 and 1
-        power : float, default=None
+        power : float | None
             Power of the test (1 minus Type II error probability). Must be between 0 and 1
-        alternative : {'two-sided', 'greater', 'less'}
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
             A character string specifying the alternative hypothesis
         """
         self.effect_size = effect_size
@@ -126,29 +146,34 @@ class pwr_2n(abc.ABC):
         self.power = power
         self.alternative = alternative.casefold()
         self.method = "Difference of proportion power calculation for binomial distribution (arcsine transformation)"
-        self.note = "Different sample sizes"
+        self.note: str | None = "Different sample sizes"
 
     @abc.abstractmethod
-    def _get_power(self) -> None:
+    def _get_power(self) -> float:
+        """Calculate power given effect_size, n1, n2, and sig_level."""
         pass
 
     @abc.abstractmethod
-    def _get_effect_size(self, effect_size: float) -> None:
+    def _get_effect_size(self, effect_size: float) -> float:
+        """Calculate difference from target power for given effect_size."""
         pass
 
     @abc.abstractmethod
-    def _get_n1(self, n1: int) -> None:
+    def _get_n1(self, n1: int) -> float:
+        """Calculate difference from target power for given n1."""
         pass
 
     @abc.abstractmethod
-    def _get_n2(self, n2: int) -> None:
+    def _get_n2(self, n2: int) -> float:
+        """Calculate difference from target power for given n2."""
         pass
 
     @abc.abstractmethod
-    def _get_sig_level(self, sig_level: float) -> None:
+    def _get_sig_level(self, sig_level: float) -> float:
+        """Calculate difference from target power for given sig_level."""
         pass
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, float | int | str | None]:
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
@@ -188,28 +213,34 @@ class pwr_2n(abc.ABC):
 
 
 class pwr_2p(pwr_1n):
-    def __init(
+    """Power calculation for two proportions test (equal sample sizes).
+
+    Computes power calculations for testing the difference between two proportions
+    using the arcsine transformation, with equal sample sizes per group.
+    """
+
+    def __init__(
         self,
-        h: Optional[float],
-        n: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        h: float | None,
+        n: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a test with two proportions but the same sample size.
+        """Initialize two proportions test with equal sample sizes.
 
         Parameters
         ----------
-        h : float
-            Our effect size
-        n : int
-            Our sample size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        h : float | None
+            Effect size (arcsine transformation)
+        n : int | None
+            Sample size per group
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         super().__init__(h, n, sig_level, power, alternative)
 
@@ -265,31 +296,37 @@ class pwr_2p(pwr_1n):
 
 
 class pwr_2p2n(pwr_2n):
-    def __init(
+    """Power calculation for two proportions test (unequal sample sizes).
+
+    Computes power calculations for testing the difference between two proportions
+    using the arcsine transformation, with different sample sizes per group.
+    """
+
+    def __init__(
         self,
-        h: Optional[float],
-        n1: Optional[int],
-        n2: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        h: float | None,
+        n1: int | None,
+        n2: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a test with two proportions and two different sample sizes.
+        """Initialize two proportions test with unequal sample sizes.
 
         Parameters
         ----------
-        h : float
-            Our effect size
-        n1 : int
+        h : float | None
+            Effect size (arcsine transformation)
+        n1 : int | None
             Sample size for the first group
-        n2 : int
+        n2 : int | None
             Sample size for the second group
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         super().__init__(h, n1, n2, sig_level, power, alternative)
 
@@ -372,28 +409,33 @@ class pwr_2p2n(pwr_2n):
 
 
 class pwr_anova:
+    """Power calculation for balanced one-way ANOVA.
+
+    Computes power calculations for balanced one-way analysis of variance tests.
+    """
+
     def __init__(
         self,
-        k: Optional[int],
-        n: Optional[int],
-        f: Optional[float],
-        sig_level: Optional[float],
-        power: Optional[float],
-    ):
-        """Class for handling a balanced one-way analysis of variance tests.
+        k: int | None,
+        n: int | None,
+        f: float | None,
+        sig_level: float | None,
+        power: float | None,
+    ) -> None:
+        """Initialize balanced one-way ANOVA power test.
 
         Parameters
         ----------
-        k : int
+        k : int | None
             Number of groups
-        n : int
+        n : int | None
             Number of samples per group
-        f : float
+        f : float | None
             Effect size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
         """
         self.k = k
         self.n = n
@@ -465,7 +507,8 @@ class pwr_anova:
         )
         return sig_level
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, int | float | str]:
+        """Perform power calculation for ANOVA test."""
         if self.power is None:
             self.power = self._get_power()
         elif self.k is None:
@@ -488,28 +531,34 @@ class pwr_anova:
 
 
 class pwr_chisq:
+    """Power calculation for chi-squared test.
+
+    Computes power calculations for chi-squared tests of association
+    or goodness of fit.
+    """
+
     def __init__(
         self,
-        w: Optional[float],
-        n: Optional[int],
-        df: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
-    ):
-        """Class for handling a chi-squared test.
+        w: float | None,
+        n: int | None,
+        df: int | None,
+        sig_level: float | None,
+        power: float | None,
+    ) -> None:
+        """Initialize chi-squared test power calculation.
 
         Parameters
         ----------
-        w : float
-            Our effect size
-        n : int
-            Our sample size
-        df : int
-            Our degrees of freedom
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
+        w : float | None
+            Effect size
+        n : int | None
+            Total sample size
+        df : int | None
+            Degrees of freedom
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
         """
         self.w = w
         self.n = n
@@ -539,7 +588,8 @@ class pwr_chisq:
         sig_level = ncx2.sf(k, self.df, self.n * pow(self.w, 2)) - self.power
         return sig_level
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, int | float | str]:
+        """Perform power calculation for chi-squared test."""
         if self.power is None:
             self.power = self._get_power()
         elif self.w is None:
@@ -560,28 +610,34 @@ class pwr_chisq:
 
 
 class pwr_f2:
+    """Power calculation for general linear model (F-test).
+
+    Computes power calculations for the general linear model, including
+    multiple regression and other F-tests.
+    """
+
     def __init__(
         self,
-        u: Optional[int],
-        v: Optional[int],
-        f2: Optional[float],
-        sig_level: Optional[float],
-        power: Optional[float],
+        u: int | None,
+        v: int | None,
+        f2: float | None,
+        sig_level: float | None,
+        power: float | None,
     ) -> None:
-        """Class for handling a general linear model.
+        """Initialize general linear model power calculation.
 
         Parameters
         ----------
-        u : int
+        u : int | None
             Degrees of freedom for the numerator
-        v : int
+        v : int | None
             Degrees of freedom for the denominator
-        f2 : float
-            OUr effect size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
+        f2 : float | None
+            Effect size (f-squared)
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
         """
         self.u = u
         self.v = v
@@ -615,7 +671,8 @@ class pwr_f2:
         sig_level = ncf.sf(f_dist.isf(sig_level, self.u, self.v), self.u, self.v, l_var) - self.power
         return sig_level
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, int | float | str]:
+        """Perform power calculation for general linear model."""
         if self.power is None:
             self.power = self._get_power()
         elif self.u is None:
@@ -637,28 +694,34 @@ class pwr_f2:
 
 
 class pwr_norm(pwr_1n):
+    """Power calculation for normal distribution with known variance.
+
+    Computes power calculations for testing the mean of a normal distribution
+    when the variance is known.
+    """
+
     def __init__(
         self,
-        d: Optional[float],
-        n: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        d: float | None,
+        n: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling the mean of a normal distribution with known variance.
+        """Initialize normal distribution power calculation.
 
         Parameters
         ----------
-        d : float
-            Our effect size
-        n : int
-            Our sample size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        d : float | None
+            Effect size (standardized mean difference)
+        n : int | None
+            Sample size
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         super().__init__(d, n, sig_level, power, alternative)
         self.method = "Mean power calculation for normal distribution with known variance"
@@ -716,28 +779,34 @@ class pwr_norm(pwr_1n):
 
 
 class pwr_p(pwr_norm):
+    """Power calculation for one-sample proportion test.
+
+    Computes power calculations for testing a single proportion using
+    the arcsine transformation.
+    """
+
     def __init__(
         self,
-        h: Optional[float],
-        n: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        h: float | None,
+        n: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a one-sample proportion test.
+        """Initialize one-sample proportion test power calculation.
 
         Parameters
         ----------
-        h : float
-            Our effect size
-        n : int
-            Our sample size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        h : float | None
+            Effect size (arcsine transformation)
+        n : int | None
+            Sample size
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         super().__init__(h, n, sig_level, power, alternative)
         self.method = "Proportion power calculation for binomial distribution (arcsine transformation)"
@@ -745,28 +814,34 @@ class pwr_p(pwr_norm):
 
 
 class pwr_r(pwr_1n):
+    """Power calculation for correlation test.
+
+    Computes approximate power calculations for testing correlation coefficients
+    using the arctanh (Fisher's Z) transformation.
+    """
+
     def __init__(
         self,
-        r: Optional[float],
-        n: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        r: float | None,
+        n: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a test of correlations.
+        """Initialize correlation test power calculation.
 
         Parameters
         ----------
-        r : float
-            Our effect size
-        n : int
-            Our sample size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        r : float | None
+            Correlation coefficient
+        n : int | None
+            Sample size
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         super().__init__(r, n, sig_level, power, alternative)
         self.method = "Approximate correlation power calculation (arctanh transformation)"
@@ -781,7 +856,6 @@ class pwr_r(pwr_1n):
             sig_level = self.sig_level
         ttt = t_dist.isf(sig_level, df=self.n - 2)
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
-        print(self.effect_size)
         zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
@@ -841,7 +915,8 @@ class pwr_r(pwr_1n):
             sig_level = norm.cdf((zr - zrc) * sqrt(self.n - 3)) - self.power
         return sig_level
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, float | int | str]:
+        """Perform power calculation for correlation test."""
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
@@ -864,31 +939,36 @@ class pwr_r(pwr_1n):
 
 
 class pwr_t:
+    """Power calculation for t-test.
+
+    Computes power calculations for one-sample, two-sample, or paired t-tests.
+    """
+
     def __init__(
         self,
-        n: Optional[int],
-        d: Optional[float],
-        sig_level: Optional[float],
-        power: Optional[float],
+        n: int | None,
+        d: float | None,
+        sig_level: float | None,
+        power: float | None,
         type: str = "two-sample",
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a t-test of means.
+        """Initialize t-test power calculation.
 
         Parameters
         ----------
-        n : int
-            Our sample size
-        d : float
-            Our effect size
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        type : {'two-sample', 'one-sample', 'paired'}
-            Type of t-test: One sample, two sample or paired sample
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        n : int | None
+            Sample size (per group for two-sample, pairs for paired)
+        d : float | None
+            Effect size (Cohen's d)
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        type : {'two-sample', 'one-sample', 'paired'}, default='two-sample'
+            Type of t-test
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         self.n = n
         self.d = d
@@ -898,7 +978,7 @@ class pwr_t:
         self.alternative = alternative.casefold()
         if self.type == "one-sample":
             self.method = "One Sample"
-            self.note = None
+            self.note: str | None = None
             self.t_sample = 1
         elif self.type == "paired":
             self.method = "Paired Sample"
@@ -989,7 +1069,8 @@ class pwr_t:
             sig_level = nct.cdf(t_dist.ppf(sig_level, nu), nu, sqrt(self.n / self.t_sample) * self.d) - self.power
         return sig_level
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, int | float | str | None]:
+        """Perform power calculation for t-test."""
         if self.power is None:
             self.power = self._get_power()
         elif self.d is None:
@@ -1025,31 +1106,37 @@ class pwr_t:
 
 
 class pwr_t2n(pwr_2n):
+    """Power calculation for two-sample t-test with unequal sample sizes.
+
+    Computes power calculations for two-sample t-tests when the two groups
+    have different sample sizes.
+    """
+
     def __init__(
         self,
-        d: Optional[float],
-        n1: Optional[int],
-        n2: Optional[int],
-        sig_level: Optional[float],
-        power: Optional[float],
+        d: float | None,
+        n1: int | None,
+        n2: int | None,
+        sig_level: float | None,
+        power: float | None,
         alternative: str = "two-sided",
     ) -> None:
-        """Class for handling a two-sample t-test of means.
+        """Initialize two-sample t-test with unequal sizes.
 
         Parameters
         ----------
-        d : float
-            Our effect size
-        n1 : int
-            Sample size of our first group
-        n2 : int
-            Sample size of our second group
-        sig_level : float
-            The significance level of our test. Must be between 0 and 1 if specified
-        power : float
-            The power of our test. Must be between 0 and 1 if specified
-        alternative : {'two-sided', 'greater', 'less'}
-            A character string specifying our alternative hypothesis
+        d : float | None
+            Effect size (Cohen's d)
+        n1 : int | None
+            Sample size of the first group
+        n2 : int | None
+            Sample size of the second group
+        sig_level : float | None
+            Significance level (Type I error probability). Must be between 0 and 1
+        power : float | None
+            Power of test. Must be between 0 and 1
+        alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+            The alternative hypothesis
         """
         super().__init__(d, n1, n2, sig_level, power, alternative)
         self.method = "T test power calculation"
@@ -1191,7 +1278,8 @@ class pwr_t2n(pwr_2n):
             )
         return sig_level
 
-    def pwr_test(self) -> Dict:
+    def pwr_test(self) -> dict[str, int | float | str | None]:
+        """Perform power calculation for two-sample t-test with unequal sizes."""
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:

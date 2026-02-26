@@ -1,5 +1,7 @@
+"""Effect size calculation functions for statistical power analysis."""
+
+from collections.abc import Sequence
 from math import asin, sqrt
-from typing import Sequence, Union, Dict
 
 import numpy as np
 import numpy.typing as npt
@@ -11,85 +13,120 @@ def es_h(p1: float, p2: float) -> float:
     Parameters
     ----------
     p1 : float
-        First proportion
+        First proportion (0 <= p1 <= 1)
     p2 : float
-        Second proportion
+        Second proportion (0 <= p2 <= 1)
 
     Returns
     -------
-    The corresponding effect size
+    float
+        The corresponding effect size h
     """
     return 2 * asin(sqrt(p1)) - 2 * asin(sqrt(p2))
 
 
-def es_w1(p0: Union[npt.ArrayLike, Sequence], p1: Union[npt.ArrayLike, Sequence]) -> float:
-    """Compute effect size w for two sets of k probabilities P0 (null hypothesis) and P1 (alternative hypothesis)
+def es_w1(p0: npt.ArrayLike | Sequence[float], p1: npt.ArrayLike | Sequence[float]) -> float:
+    """Compute effect size w for two sets of k probabilities.
+
+    Calculates the effect size for goodness of fit chi-squared tests comparing
+    the null hypothesis probabilities P0 with alternative hypothesis probabilities P1.
 
     Parameters
     ----------
     p0 : array-like
-        First set of k probabilities
+        First set of k probabilities (null hypothesis)
     p1 : array-like
-        Second set of k probabilities
+        Second set of k probabilities (alternative hypothesis)
 
     Returns
     -------
-    The corresponding effect size w
+    float
+        The corresponding effect size w
     """
-    p0, p1 = np.array(p0), np.array(p1)
-    return sqrt(np.sum(np.power(p1 - p0, 2) / p0))
+    p0_arr, p1_arr = np.array(p0), np.array(p1)
+    return float(sqrt(np.sum(np.power(p1_arr - p0_arr, 2) / p0_arr)))
 
 
-def es_w2(p: Union[Sequence, npt.ArrayLike]) -> float:
-    """Compute effect size w for a two-way probability table corresponding to the alternative hypothesis in the chi-
-    squared test of association in two-way contingency tables.
+def es_w2(p: Sequence[Sequence[float]] | npt.ArrayLike) -> float:
+    """Compute effect size w for a two-way probability table.
+
+    Calculates effect size for chi-squared test of association in two-way
+    contingency tables using the alternative hypothesis probability table.
 
     Parameters
     ----------
-    p : 2x2 array
+    p : 2D array-like
         A two-way probability table
 
     Returns
     -------
-    The corresponding effect size w
+    float
+        The corresponding effect size w
     """
-    p_i = np.sum(p, axis=1)[np.newaxis]
-    p_j = np.sum(p, axis=0)[np.newaxis]
+    p_arr = np.array(p)
+    p_i = np.sum(p_arr, axis=1)[np.newaxis]
+    p_j = np.sum(p_arr, axis=0)[np.newaxis]
     p0 = np.dot(np.transpose(p_i), p_j)
-    return sqrt(np.sum(np.power(p - p0, 2) / p0))
+    return float(sqrt(np.sum(np.power(p_arr - p0, 2) / p0)))
 
 
-def cohen_es(test: str = "p", size: str = "small") -> Dict:
-    """Give the conventional effect size (small, medium, large) for the tests available in this package.
+def cohen_es(test: str = "p", size: str = "small") -> dict[str, str | float]:
+    """Get conventional effect size values for statistical tests.
+
+    Returns the conventional effect size (small, medium, large) for various
+    statistical tests as defined by Cohen (1988).
 
     Parameters
     ----------
-    test : {'p', 't', 'r', 'anov', 'chisq', 'f2'}
+    test : {'p', 't', 'r', 'anov', 'anova', 'chisq', 'chisquare', 'f2'}
         The statistical test of interest
     size : {'small', 'medium', 'large'}
-        The effect size
+        The effect size category
 
     Returns
     -------
-    The corresponding effect size
+    dict[str, str | float]
+        Dictionary containing test name, size, effect_size value, and method
+
+    Raises
+    ------
+    ValueError
+        If the test type is not recognized
+
+    References
+    ----------
+    Cohen, J. (1988). Statistical Power Analysis for the Behavioral Sciences
+    (2nd ed.). Hillsdale, NJ: Lawrence Erlbaum Associates.
     """
-    test, size = test.casefold(), size.casefold()
-    if test in ["p", "t"]:
-        sizes = {"small": 0.2, "medium": 0.5, "large": 0.8}
-    elif test == "r":
-        sizes = {"small": 0.1, "medium": 0.3, "large": 0.5}
-    elif test in ["anov", "anova"]:
-        sizes = {"small": 0.1, "medium": 0.25, "large": 0.4}
-    elif test in ["chisq", "chisquare"]:
-        sizes = {"small": 0.1, "medium": 0.3, "large": 0.5}
-    elif test == "f2":
-        sizes = {"small": 0.02, "medium": 0.15, "large": 0.35}
+    test_lower, size_lower = test.casefold(), size.casefold()
+
+    size_mappings: dict[str, dict[str, float]] = {
+        "p_t": {"small": 0.2, "medium": 0.5, "large": 0.8},
+        "r": {"small": 0.1, "medium": 0.3, "large": 0.5},
+        "anova": {"small": 0.1, "medium": 0.25, "large": 0.4},
+        "chisq": {"small": 0.1, "medium": 0.3, "large": 0.5},
+        "f2": {"small": 0.02, "medium": 0.15, "large": 0.35},
+    }
+
+    if test_lower in ["p", "t"]:
+        sizes = size_mappings["p_t"]
+    elif test_lower == "r":
+        sizes = size_mappings["r"]
+    elif test_lower in ["anov", "anova"]:
+        sizes = size_mappings["anova"]
+    elif test_lower in ["chisq", "chisquare"]:
+        sizes = size_mappings["chisq"]
+    elif test_lower == "f2":
+        sizes = size_mappings["f2"]
     else:
-        raise ValueError("Cannot identify statistical test")
-    es = sizes[size]
+        raise ValueError(f"Cannot identify statistical test: {test}")
+
+    if size_lower not in sizes:
+        raise ValueError(f"Invalid size: {size}. Must be 'small', 'medium', or 'large'")
+
     return {
-        "test": test,
-        "size": size,
-        "effect_size": es,
-        "method": "Conventional effect size from Cohen (1982)",
+        "test": test_lower,
+        "size": size_lower,
+        "effect_size": sizes[size_lower],
+        "method": "Conventional effect size from Cohen (1988)",
     }

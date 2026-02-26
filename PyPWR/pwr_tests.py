@@ -1,4 +1,8 @@
-from typing import Dict, Optional
+"""User-facing functions for statistical power calculations.
+
+This module provides convenient wrapper functions for calculating power,
+sample size, effect size, or significance level for various statistical tests.
+"""
 
 from PyPWR.power_classes import (
     pwr_2p,
@@ -15,33 +19,43 @@ from PyPWR.power_classes import (
 
 
 def pwr_2p_test(
-    h: Optional[float] = None,
-    n: Optional[int] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    h: float | None = None,
+    n: int | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test, or determine parameters to obtain target power (similar to power.prop.test).
+) -> dict[str, float | int | str]:
+    """Compute power for two proportions test with equal sample sizes.
+
+    Computes power of test, or determines parameters to obtain target power.
+    Similar to R's pwr.2p.test function.
 
     Parameters
     ----------
-    h : float, default=None
-        The effect size
-    n : int, default=None
-        Number of observations (per sample)
-    sig_level : float, default=None
+    h : float | None, default=None
+        Effect size (arcsine transformation)
+    n : int | None, default=None
+        Number of observations per sample
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
-        Power of test (1 minus Type II error probability). Must be betwen 0 and 1
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    power : float | None, default=None
+        Power of test (1 minus Type II error probability). Must be between 0 and 1
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our h, n, sig_level, power and alternative hypothesis
+    dict[str, float | int | str]
+        Dictionary containing h, n, sig_level, power, alternative, method, and note
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of h, n, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(v is None for v in [h, n, sig_level, power]):
         raise ValueError("One of h, n, sig_level or power must be None")
@@ -86,36 +100,46 @@ def pwr_2p_test(
 
 
 def pwr_2p2n_test(
-    h: Optional[float] = None,
-    n1: Optional[int] = None,
-    n2: Optional[int] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    h: float | None = None,
+    n1: int | None = None,
+    n2: int | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test, or determine parameters to obtain target power.
+) -> dict[str, float | int | str]:
+    """Compute power for two proportions test with unequal sample sizes.
+
+    Computes power of test, or determines parameters to obtain target power.
+    Similar to R's pwr.2p2n.test function.
 
     Parameters
     ----------
-    h : float, default=None
-        The effect size
-    n1 : int, default=None
+    h : float | None, default=None
+        Effect size (arcsine transformation)
+    n1 : int | None, default=None
         Number of observations in the first sample
-    n2 : int, default=None
+    n2 : int | None, default=None
         Number of observations in the second sample
-    sig_level : float, default=None
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
-        Power of the test (1 minus Type II error probability). Must be between 0 and 1
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    power : float | None, default=None
+        Power of test (1 minus Type II error probability). Must be between 0 and 1
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our h, n1, n2, sig_level, power and alternative hypothesis
+    dict[str, float | int | str]
+        Dictionary containing h, n1, n2, sig_level, power, alternative, method, and note
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of h, n1, n2, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(v is None for v in [h, n1, n2, sig_level, power]):
         raise ValueError("One of h, n1, n2, sig_level or power must be None")
@@ -168,33 +192,43 @@ def pwr_2p2n_test(
 
 
 def pwr_anova_test(
-    k: Optional[int] = None,
-    n: Optional[int] = None,
-    f: Optional[float] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    k: int | None = None,
+    n: int | None = None,
+    f: float | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
+) -> dict[str, int | float | str]:
+    """Compute power for balanced one-way ANOVA.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.anova.test function.
 
     Parameters
     ----------
-    k : int, default=None
+    k : int | None, default=None
         Number of groups
-    n : int, default=None
-        Number of observations (per group)
-    f : float, default=None
+    n : int | None, default=None
+        Number of observations per group
+    f : float | None, default=None
         Effect size
-    sig_level : float, default=None
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our k, n, f, sig_level, and power
+    dict[str, int | float | str]
+        Dictionary containing k, n, effect_size (f), sig_level, power, method, and note
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of k, n, f, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(v is None for v in [k, n, f, sig_level, power]):
         raise ValueError("One of k, n, f, sig_level or power must be None")
@@ -243,33 +277,43 @@ def pwr_anova_test(
 
 
 def pwr_chisq_test(
-    w: Optional[float] = None,
-    n: Optional[int] = None,
+    w: float | None = None,
+    n: int | None = None,
     df: int = 1,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
+) -> dict[str, int | float | str]:
+    """Compute power for chi-squared test.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.chisq.test function.
 
     Parameters
     ----------
-    w : float, default=None
+    w : float | None, default=None
         Effect size
-    n : int, default=None
+    n : int | None, default=None
         Total number of observations
     df : int, default=1
         Degrees of freedom
-    sig_level : float, default=None
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our w, n, df, sig_level and power
+    dict[str, int | float | str]
+        Dictionary containing effect_size (w), n, df, sig_level, power, method, and note
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of w, n, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(v is None for v in [w, n, sig_level, power]):
         raise ValueError("One of w, n, sig_level or power must be None")
@@ -316,33 +360,43 @@ def pwr_chisq_test(
 
 
 def pwr_f2_test(
-    u: Optional[int] = None,
-    v: Optional[int] = None,
-    f2: Optional[float] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    u: int | None = None,
+    v: int | None = None,
+    f2: float | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
+) -> dict[str, int | float | str]:
+    """Compute power for general linear model F-test.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.f2.test function.
 
     Parameters
     ----------
-    u : int, default=None
+    u : int | None, default=None
         Degrees of freedom for the numerator
-    v : int, default=None
+    v : int | None, default=None
         Degrees of freedom for the denominator
-    f2 : float, default=None
-        Effect size
-    sig_level : float, default=None
+    f2 : float | None, default=None
+        Effect size (f-squared)
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our u, v, f2, sig_level and power
+    dict[str, int | float | str]
+        Dictionary containing u, v, effect_size (f2), sig_level, power, and method
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of u, v, f2, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(x is None for x in [u, v, f2, sig_level, power]):
         raise ValueError("One of u, v, f2, sig_level or power must be None")
@@ -389,33 +443,43 @@ def pwr_f2_test(
 
 
 def pwr_norm_test(
-    d: Optional[float] = None,
-    n: Optional[int] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    d: float | None = None,
+    n: int | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
+) -> dict[str, float | int | str]:
+    """Compute power for normal distribution with known variance.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.norm.test function.
 
     Parameters
     ----------
-    d : float, default=None
-        Effect size
-    n : int, default=None
+    d : float | None, default=None
+        Effect size (standardized mean difference)
+    n : int | None, default=None
         Number of observations
-    sig_level : float, default=None
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our d, n, sig_level, power and alternative hypothesis
+    dict[str, float | int | str]
+        Dictionary containing effect_size (d), n, sig_level, power, alternative, and method
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of d, n, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(x is None for x in [d, n, sig_level, power]):
         raise ValueError("One of d, n, sig_level or power must be None")
@@ -460,33 +524,43 @@ def pwr_norm_test(
 
 
 def pwr_p_test(
-    h: Optional[float] = None,
-    n: Optional[int] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    h: float | None = None,
+    n: int | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
+) -> dict[str, float | int | str]:
+    """Compute power for one-sample proportion test.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.p.test function.
 
     Parameters
     ----------
-    h : float, default=None
-        Effect size
-    n : int, default=None
+    h : float | None, default=None
+        Effect size (arcsine transformation)
+    n : int | None, default=None
         Number of observations
-    sig_level : float, default=None
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our h, n, sig_level, power and alternative hypothesis
+    dict[str, float | int | str]
+        Dictionary containing effect_size (h), n, sig_level, power, alternative, and method
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of h, n, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(x is None for x in [h, n, sig_level, power]):
         raise ValueError("One of h, n, sig_level or power must be None")
@@ -531,33 +605,43 @@ def pwr_p_test(
 
 
 def pwr_r_test(
-    n: Optional[int] = None,
-    r: Optional[float] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    n: int | None = None,
+    r: float | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of test or determine parameters to obtain target power (same as power.anova.test).
+) -> dict[str, float | int | str]:
+    """Compute power for correlation test.
+
+    Computes approximate power of test or determines parameters to obtain target
+    power using the arctanh transformation. Similar to R's pwr.r.test function.
 
     Parameters
     ----------
-    n : int, default=None
+    n : int | None, default=None
         Number of observations
-    r : float, default=none
+    r : float | None, default=None
         Linear correlation coefficient
-    sig_level : float, default=None
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our h, n, sig_level, power and alternative hypothesis
+    dict[str, float | int | str]
+        Dictionary containing effect_size (r), n, sig_level, power, alternative, and method
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of r, n, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(x is None for x in [r, n, sig_level, power]):
         raise ValueError("One of r, n, sig_level or power must be None")
@@ -602,36 +686,47 @@ def pwr_r_test(
 
 
 def pwr_t_test(
-    n: Optional[int] = None,
-    d: Optional[float] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    n: int | None = None,
+    d: float | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     test_type: str = "paired",
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of tests or determine parameters to obtain target power (similar to as power.t.test)
+) -> dict[str, int | float | str | None]:
+    """Compute power for t-test.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.t.test function.
 
     Parameters
     ----------
-    n : int, default=None
-        Number of observations (per sample)
-    d : float, default=None
-        Effect size (Cohen’s d) - difference between the means divided by the pooled standard deviation
-    sig_level : float, default=None
+    n : int | None, default=None
+        Number of observations (per sample for two-sample, pairs for paired)
+    d : float | None, default=None
+        Effect size (Cohen's d) - standardized mean difference
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    test_type : {'two-sample', 'one-sample', 'paired'}
-        Type of t-test: One sample, two sample or paired sample
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    test_type : {'two-sample', 'one-sample', 'paired'}, default='paired'
+        Type of t-test
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our n, d, sig_level, power and alternative hypothesis
+    dict[str, int | float | str | None]
+        Dictionary containing n, effect_size (d), sig_level, power, alternative,
+        method, and optionally note
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of n, d, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(x is None for x in [n, d, sig_level, power]):
         raise ValueError("One of n, d, sig_level or power must be None")
@@ -700,36 +795,47 @@ def pwr_t_test(
 
 
 def pwr_t2n_test(
-    n1: Optional[int] = None,
-    n2: Optional[int] = None,
-    d: Optional[float] = None,
-    sig_level: Optional[float] = None,
-    power: Optional[float] = None,
+    n1: int | None = None,
+    n2: int | None = None,
+    d: float | None = None,
+    sig_level: float | None = None,
+    power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> Dict:
-    """Compute power of tests or determine parameters to obtain target power (similar to as power.t.test)
+) -> dict[str, int | float | str]:
+    """Compute power for two-sample t-test with unequal sample sizes.
+
+    Computes power of test or determines parameters to obtain target power.
+    Similar to R's pwr.t2n.test function.
 
     Parameters
     ----------
-    n1 : int, default=None
+    n1 : int | None, default=None
         Number of observations in the first sample
-    n2 : int, default=None
+    n2 : int | None, default=None
         Number of observations in the second sample
-    d : float, default=None
-        Effect size
-    sig_level : float, default=None
+    d : float | None, default=None
+        Effect size (Cohen's d)
+    sig_level : float | None, default=None
         Significance level (Type I error probability). Must be between 0 and 1
-    power : float, default=None
+    power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    alternative : {'two-sided', 'greater', 'less'}
-        A character string specifying the alternative hypothesis
+    alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
+        The alternative hypothesis
     print_pretty : bool, default=True
-        Whether we wish to print the results in a pretty format or not
+        Whether to print the results in a formatted output
 
     Returns
     -------
-    A dict containing our n1, n2, d, sig_level, power and alternative hypothesis
+    dict[str, int | float | str]
+        Dictionary containing effect_size (d), n1, n2, sig_level, power,
+        alternative, method, and note
+
+    Raises
+    ------
+    ValueError
+        If not exactly one of n1, n2, d, sig_level, or power is None, or if
+        parameter values are out of valid range
     """
     if not any(x is None for x in [n1, n2, d, sig_level, power]):
         raise ValueError("One of n1, n2, d sig_level or power must be None")

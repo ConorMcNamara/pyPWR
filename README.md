@@ -4,7 +4,7 @@ Despite the proliferation of A/B testing in Data Science, Python lacks a singula
 
 The goal of this package is to reverse engineer the R library to provide a Python equivalent of `pwr`. Included are all equivalent functions in the R library, with some changes to make it more Pythonic (e.g., classes instead of inner functions; underscores for names rather than periods), as well as unit tests to ensure that the results are in-line with what the `pwr` library reports. 
 
-As for what pwr does, to quote the documenation:
+As for what pwr does, to quote the documentation:
 > This package contains functions for basic power calculations using effect sizes and notations from
 Cohen (1988) : pwr_p_test: test for one proportion (ES=h) pwr_2p_test: test for two proportions
 (ES=h) pwr_2p2n_test: test for two proportions (ES=h, unequal sample sizes) pwr_t_test: one sample
