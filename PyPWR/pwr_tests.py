@@ -25,7 +25,7 @@ def pwr_2p_test(
     power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> dict[str, float | int | str]:
+) -> dict[str, float | int | str | None]:
     """Compute power for two proportions test with equal sample sizes.
 
     Computes power of test, or determines parameters to obtain target power.
@@ -48,7 +48,7 @@ def pwr_2p_test(
 
     Returns
     -------
-    dict[str, float | int | str]
+    dict[str, float | int | str | None]
         Dictionary containing h, n, sig_level, power, alternative, method, and note
 
     Raises
@@ -72,7 +72,7 @@ def pwr_2p_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -107,7 +107,7 @@ def pwr_2p2n_test(
     power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> dict[str, float | int | str]:
+) -> dict[str, float | int | str | None]:
     """Compute power for two proportions test with unequal sample sizes.
 
     Computes power of test, or determines parameters to obtain target power.
@@ -132,7 +132,7 @@ def pwr_2p2n_test(
 
     Returns
     -------
-    dict[str, float | int | str]
+    dict[str, float | int | str | None]
         Dictionary containing h, n1, n2, sig_level, power, alternative, method, and note
 
     Raises
@@ -160,7 +160,7 @@ def pwr_2p2n_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -248,7 +248,7 @@ def pwr_anova_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -331,7 +331,7 @@ def pwr_chisq_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -416,7 +416,7 @@ def pwr_f2_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -449,7 +449,7 @@ def pwr_norm_test(
     power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> dict[str, float | int | str]:
+) -> dict[str, float | int | str | None]:
     """Compute power for normal distribution with known variance.
 
     Computes power of test or determines parameters to obtain target power.
@@ -472,7 +472,7 @@ def pwr_norm_test(
 
     Returns
     -------
-    dict[str, float | int | str]
+    dict[str, float | int | str | None]
         Dictionary containing effect_size (d), n, sig_level, power, alternative, and method
 
     Raises
@@ -498,7 +498,7 @@ def pwr_norm_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -530,7 +530,7 @@ def pwr_p_test(
     power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> dict[str, float | int | str]:
+) -> dict[str, float | int | str | None]:
     """Compute power for one-sample proportion test.
 
     Computes power of test or determines parameters to obtain target power.
@@ -553,7 +553,7 @@ def pwr_p_test(
 
     Returns
     -------
-    dict[str, float | int | str]
+    dict[str, float | int | str | None]
         Dictionary containing effect_size (h), n, sig_level, power, alternative, and method
 
     Raises
@@ -579,7 +579,7 @@ def pwr_p_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -611,7 +611,7 @@ def pwr_r_test(
     power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> dict[str, float | int | str]:
+) -> dict[str, float | int | str | None]:
     """Compute power for correlation test.
 
     Computes approximate power of test or determines parameters to obtain target
@@ -660,7 +660,7 @@ def pwr_r_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2
@@ -743,7 +743,7 @@ def pwr_t_test(
         if "note" in pwr:
             str_print = (
                 "\t"
-                + pwr["method"]
+                + str(pwr["method"])
                 + "\n" * 2
                 + "\t" * 2
                 + " " * 2
@@ -769,7 +769,7 @@ def pwr_t_test(
         else:
             str_print = (
                 "\t"
-                + pwr["method"]
+                + str(pwr["method"])
                 + "\n" * 2
                 + "\t" * 2
                 + " " * 2
@@ -802,7 +802,7 @@ def pwr_t2n_test(
     power: float | None = None,
     alternative: str = "two-sided",
     print_pretty: bool = True,
-) -> dict[str, int | float | str]:
+) -> dict[str, int | float | str | None]:
     """Compute power for two-sample t-test with unequal sample sizes.
 
     Computes power of test or determines parameters to obtain target power.
@@ -827,7 +827,7 @@ def pwr_t2n_test(
 
     Returns
     -------
-    dict[str, int | float | str]
+    dict[str, int | float | str | None]
         Dictionary containing effect_size (d), n1, n2, sig_level, power,
         alternative, method, and note
 
@@ -856,7 +856,7 @@ def pwr_t2n_test(
     if print_pretty:
         str_print = (
             "\t"
-            + pwr["method"]
+            + str(pwr["method"])
             + "\n" * 2
             + "\t" * 2
             + " " * 2

@@ -5,7 +5,7 @@
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
-[![Typed with mypy](https://img.shields.io/badge/typed-mypy-blue.svg)](https://github.com/python/mypy)
+[![Typed with zuban](https://img.shields.io/badge/typed-zuban-blue.svg)](https://github.com/zubanls/zuban)
 
 A comprehensive Python package for statistical power analysis, providing a Pythonic equivalent to R's popular [pwr](https://github.com/heliosdrm/pwr) library.
 
@@ -342,10 +342,10 @@ ruff format .
 ruff check .
 
 # Type check
-mypy PyPWR
+zuban check PyPWR
 
 # Run all checks (formatting, linting, type checking, tests with coverage)
-ruff format . && ruff check . && mypy PyPWR && pytest --cov=PyPWR
+ruff format . && ruff check . && zuban check PyPWR && pytest --cov=PyPWR
 ```
 
 ## License

@@ -43,7 +43,7 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.0.0",
     "ruff>=0.8.0",
-    "mypy>=1.11.0",
+    "zuban>=0.1.0",
     "autopep8>=2.3.0",
     "pydocstringformatter>=0.7.3"
 ]
@@ -99,7 +99,7 @@ ignore = [
 "PyPWR/power_classes.py" = ["N801"] # Class names like pwr_2p intentionally match R's pwr library
 "test/*.py" = ["N801", "N802"] # Test class and method names follow pytest conventions
 
-[tool.mypy]
+[tool.zuban]
 python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
@@ -112,6 +112,15 @@ warn_unused_ignores = true
 no_implicit_optional = true
 strict_equality = true
 ignore_missing_imports = true
+exclude_gitignore = true
+strict = true
+mode = "default"  # Or "mypy"
+
+# Recommended (and the default) for untyped code
+untyped_strict_optional = true
+
+# Mypy's default is "any", Zuban's "inferred"
+untyped_function_return_mode = "inferred"
 
 [tool.pytest.ini_options]
 testpaths = ["test"]

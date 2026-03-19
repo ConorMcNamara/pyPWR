@@ -33,8 +33,8 @@ format:  ## Format code with ruff
 format-check:  ## Check code formatting without making changes
 	poetry run ruff format --check PyPWR test
 
-type-check:  ## Run mypy type checker
-	poetry run mypy PyPWR
+type-check:  ## Run zuban type checker
+	poetry run zuban check PyPWR
 
 check: lint type-check  ## Run all checks (lint + type-check)
 
@@ -48,7 +48,7 @@ clean:  ## Clean up build artifacts and cache files
 	rm -rf .coverage
 	rm -rf coverage.xml
 	rm -rf .pytest_cache/
-	rm -rf .mypy_cache/
+	rm -rf .zuban_cache/
 	rm -rf .ruff_cache/
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name '*.pyc' -delete
