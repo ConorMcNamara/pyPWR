@@ -74,6 +74,19 @@ class pwr_1n(abc.ABC):
         pass
 
     def pwr_test(self) -> dict[str, float | int | str | None]:
+        """Solve for the single unspecified parameter and return the full result.
+
+        Whichever of ``power``, ``effect_size``, ``n``, or ``sig_level`` was left
+        as ``None`` is computed (via root-finding for all but ``power``), and the
+        completed set of parameters is returned.
+
+        Returns
+        -------
+        dict[str, float | int | str | None]
+            The resolved parameters (``effect_size``, ``n``, ``sig_level``,
+            ``power``), along with ``alternative``, ``method``, and ``note`` when
+            a note is present.
+        """
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
@@ -176,6 +189,19 @@ class pwr_2n(abc.ABC):
         pass
 
     def pwr_test(self) -> dict[str, float | int | str | None]:
+        """Solve for the single unspecified parameter and return the full result.
+
+        Whichever of ``power``, ``effect_size``, ``n1``, ``n2``, or ``sig_level``
+        was left as ``None`` is computed (via root-finding for all but ``power``),
+        and the completed set of parameters is returned.
+
+        Returns
+        -------
+        dict[str, float | int | str | None]
+            The resolved parameters (``effect_size``, ``n1``, ``n2``,
+            ``sig_level``, ``power``), along with ``alternative``, ``method``, and
+            ``note`` when a note is present.
+        """
         if self.power is None:
             self.power = self._get_power()
         elif self.effect_size is None:
