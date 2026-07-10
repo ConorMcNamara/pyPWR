@@ -55,14 +55,45 @@ jobs:
           zuban check PyPWR
         continue-on-error: true
 
+  setup:
+    name: Determine Python versions
+    runs-on: ubuntu-latest
+    outputs:
+      python-versions: ${{ steps.versions.outputs.list }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Derive Python versions from pyproject.toml classifiers
+        id: versions
+        run: |
+          list=$(python - <<'PY'
+          import json, re, tomllib
+          with open("pyproject.toml", "rb") as f:
+              classifiers = tomllib.load(f)["project"]["classifiers"]
+          pat = re.compile(r"Programming Language :: Python :: (\d+\.\d+)$")
+          vs = [m.group(1) for c in classifiers if (m := pat.search(c))]
+          vs.sort(key=lambda v: tuple(map(int, v.split("."))))
+          print(json.dumps(vs))
+          PY
+          )
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+          echo "Testing against: $list"
+
   test:
     name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    needs: setup
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.13", "3.14"]
+        python-version: ${{ fromJSON(needs.setup.outputs.python-versions) }}
 
     steps:
       - name: Checkout code
@@ -85,7 +116,7 @@ jobs:
         shell: bash
 
       - name: Upload coverage reports to Codecov
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == fromJSON(needs.setup.outputs.python-versions)[0]
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
