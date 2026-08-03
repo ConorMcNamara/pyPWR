@@ -10,31 +10,31 @@ help:  ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 install:  ## Install project dependencies
-	poetry install --without dev
+	uv sync --no-dev
 
 install-dev:  ## Install project dependencies including dev dependencies
-	poetry install
+	uv sync
 
 test:  ## Run tests without coverage
-	poetry run pytest -v
+	uv run pytest -v
 
 test-cov:  ## Run tests with coverage report
-	poetry run pytest
+	uv run pytest
 
 lint:  ## Run ruff linter
-	poetry run ruff check PyPWR test
+	uv run ruff check PyPWR test
 
 lint-fix:  ## Run ruff linter and fix issues automatically
-	poetry run ruff check --fix PyPWR test
+	uv run ruff check --fix PyPWR test
 
 format:  ## Format code with ruff
-	poetry run ruff format PyPWR test
+	uv run ruff format PyPWR test
 
 format-check:  ## Check code formatting without making changes
-	poetry run ruff format --check PyPWR test
+	uv run ruff format --check PyPWR test
 
 type-check:  ## Run zuban type checker
-	poetry run zuban check PyPWR
+	uv run zuban check PyPWR
 
 check: lint type-check  ## Run all checks (lint + type-check)
 
@@ -55,12 +55,12 @@ clean:  ## Clean up build artifacts and cache files
 	find . -type f -name '*.pyo' -delete
 
 build:  ## Build the package
-	poetry build
+	uv build
 
 publish:  ## Publish package to PyPI (requires authentication)
-	poetry publish
+	uv publish
 
 publish-test:  ## Publish package to TestPyPI
-	poetry publish -r testpypi
+	uv publish --publish-url https://test.pypi.org/legacy/
 
 all: clean install-dev check-all build  ## Run full CI pipeline (clean, install, check, test, build)
