@@ -169,15 +169,9 @@ Example test structure:
 ```python
 def test_pwr_t_test_two_sample():
     """Test two-sample t-test power calculation."""
-    result = pwr_t_test(
-        d=0.5,
-        n=64,
-        sig_level=0.05,
-        type='two-sample',
-        alternative='two-sided'
-    )
-    assert result['power'] > 0.80
-    assert abs(result['power'] - 0.8014) < 1e-03
+    result = pwr_t_test(d=0.5, n=64, sig_level=0.05, type="two-sample", alternative="two-sided")
+    assert result["power"] > 0.80
+    assert abs(result["power"] - 0.8014) < 1e-03
 ```
 
 ## Submitting Changes

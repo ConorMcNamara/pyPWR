@@ -63,10 +63,10 @@ from PyPWR import pwr_2p_test
 
 # Calculate power for a two-proportion test
 result = pwr_2p_test(
-    h=0.3,              # Effect size
-    n=200,              # Sample size per group
-    sig_level=0.05,     # Significance level
-    alternative='greater'
+    h=0.3,  # Effect size
+    n=200,  # Sample size per group
+    sig_level=0.05,  # Significance level
+    alternative="greater",
 )
 
 print(f"Power: {result['power']:.4f}")
@@ -111,11 +111,11 @@ Determine how many participants you need for a two-sample t-test:
 from PyPWR import pwr_t_test
 
 result = pwr_t_test(
-    d=0.5,              # Medium effect size
-    power=0.80,         # 80% power
-    sig_level=0.05,     # 5% significance
-    type='two-sample',
-    alternative='two-sided'
+    d=0.5,  # Medium effect size
+    power=0.80,  # 80% power
+    sig_level=0.05,  # 5% significance
+    type="two-sample",
+    alternative="two-sided",
 )
 
 print(f"Required sample size per group: {result['n']}")
@@ -130,10 +130,10 @@ Check if your current sample size provides adequate power:
 from PyPWR import pwr_anova_test
 
 result = pwr_anova_test(
-    k=4,                # 4 groups
-    n=25,               # 25 per group
-    f=0.25,             # Small-to-medium effect
-    sig_level=0.05
+    k=4,  # 4 groups
+    n=25,  # 25 per group
+    f=0.25,  # Small-to-medium effect
+    sig_level=0.05,
 )
 
 print(f"Statistical power: {result['power']:.2%}")
@@ -148,10 +148,10 @@ Find what effect size you can detect with your constraints:
 from PyPWR import pwr_r_test
 
 result = pwr_r_test(
-    n=100,              # Sample size
-    power=0.80,         # Desired power
+    n=100,  # Sample size
+    power=0.80,  # Desired power
     sig_level=0.05,
-    alternative='two-sided'
+    alternative="two-sided",
 )
 
 print(f"Minimum detectable correlation: {result['effect_size']:.3f}")
@@ -167,13 +167,7 @@ from PyPWR import pwr_2p2n_test, es_h
 p1, p2 = 0.60, 0.45
 effect_size = es_h(p1, p2)
 
-result = pwr_2p2n_test(
-    h=effect_size,
-    n1=100,
-    n2=150,
-    sig_level=0.05,
-    alternative='two-sided'
-)
+result = pwr_2p2n_test(h=effect_size, n1=100, n2=150, sig_level=0.05, alternative="two-sided")
 
 print(f"Effect size h: {effect_size:.3f}")
 print(f"Power: {result['power']:.2%}")
@@ -185,17 +179,11 @@ print(f"Power: {result['power']:.2%}")
 from PyPWR import cohen_es, pwr_t_test
 
 # Get conventional "medium" effect size for t-test
-effect = cohen_es(test='t', size='medium')
+effect = cohen_es(test="t", size="medium")
 print(f"Medium effect size for t-test: {effect['effect_size']}")  # 0.5
 
 # Use in power calculation
-result = pwr_t_test(
-    d=effect['effect_size'],
-    n=30,
-    sig_level=0.05,
-    type='paired',
-    alternative='two-sided'
-)
+result = pwr_t_test(d=effect["effect_size"], n=30, sig_level=0.05, type="paired", alternative="two-sided")
 
 print(f"Power with n=30 and d=0.5: {result['power']:.2%}")
 ```
@@ -235,8 +223,7 @@ For contingency table tests:
 from PyPWR import es_w2
 
 # 2x4 contingency table
-prob = [[0.225, 0.125, 0.125, 0.125],
-        [0.160, 0.160, 0.040, 0.040]]
+prob = [[0.225, 0.125, 0.125, 0.125], [0.160, 0.160, 0.040, 0.040]]
 
 w = es_w2(prob)
 print(f"Effect size w: {w:.3f}")
@@ -248,8 +235,8 @@ print(f"Effect size w: {w:.3f}")
 from PyPWR import cohen_es
 
 # Get conventional effect sizes for different tests
-tests = ['t', 'r', 'anova', 'chisq', 'f2']
-sizes = ['small', 'medium', 'large']
+tests = ["t", "r", "anova", "chisq", "f2"]
+sizes = ["small", "medium", "large"]
 
 for test in tests:
     print(f"\n{test.upper()} test:")
