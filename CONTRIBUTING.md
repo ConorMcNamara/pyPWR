@@ -35,7 +35,7 @@ Before contributing, please:
 
 - Python 3.13 or higher
 - Git
-- pip
+- [uv](https://docs.astral.sh/uv/) (used for dependency management, building, and publishing)
 
 ### Installation
 
@@ -50,18 +50,21 @@ cd pyPWR
 3. Install the package in development mode with all dependencies:
 
 ```bash
-pip install -e ".[dev]"
+uv sync
 ```
 
-This will install:
+This creates a virtual environment in `.venv/` and installs:
 - Core dependencies (NumPy, SciPy)
-- Development dependencies (pytest, ruff, mypy, coverage tools)
+- Development dependencies (pytest, ruff, zuban, coverage tools) from the `dev` dependency group
 
 4. Verify the installation:
 
 ```bash
-pytest test/ -v
+uv run pytest test/ -v
 ```
+
+> [!TIP]
+> All commands below use `uv run <cmd>` to run inside the project environment. Common tasks are also wrapped in the `Makefile` (e.g. `make install-dev`, `make check-all`); run `make help` to see them all.
 
 ## Development Workflow
 
@@ -91,7 +94,7 @@ pyPWR maintains high code quality standards. Before committing, ensure your code
 Format your code with ruff:
 
 ```bash
-ruff format .
+uv run ruff format .
 ```
 
 #### Linting
@@ -99,21 +102,21 @@ ruff format .
 Check for linting issues:
 
 ```bash
-ruff check .
+uv run ruff check .
 ```
 
 To automatically fix some linting issues:
 
 ```bash
-ruff check . --fix
+uv run ruff check . --fix
 ```
 
 #### Type Checking
 
-Run mypy to ensure type correctness:
+Run zuban to ensure type correctness:
 
 ```bash
-mypy PyPWR
+uv run zuban check PyPWR
 ```
 
 All public functions should include type hints following PEP 484/585.
@@ -123,7 +126,9 @@ All public functions should include type hints following PEP 484/585.
 Run all quality checks at once:
 
 ```bash
-ruff format . && ruff check . && mypy PyPWR && pytest --cov=PyPWR
+make check-all
+# or, equivalently:
+uv run ruff format --check . && uv run ruff check . && uv run zuban check PyPWR && uv run pytest --cov=PyPWR
 ```
 
 ## Testing
@@ -133,7 +138,7 @@ ruff format . && ruff check . && mypy PyPWR && pytest --cov=PyPWR
 Run the full test suite:
 
 ```bash
-pytest test/ -v
+uv run pytest test/ -v
 ```
 
 ### Test Coverage
@@ -141,13 +146,13 @@ pytest test/ -v
 Check code coverage:
 
 ```bash
-pytest test/ --cov=PyPWR --cov-report=term-missing
+uv run pytest test/ --cov=PyPWR --cov-report=term-missing
 ```
 
 Generate an HTML coverage report:
 
 ```bash
-pytest test/ --cov=PyPWR --cov-report=html
+uv run pytest test/ --cov=PyPWR --cov-report=html
 # Open htmlcov/index.html in your browser
 ```
 
