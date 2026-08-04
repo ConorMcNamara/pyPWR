@@ -1,3 +1,5 @@
+import math
+
 import pytest
 
 from PyPWR import pwr_tests
@@ -874,6 +876,26 @@ class Test_T:
         expected = 0.3725015
         assert s_results["sig_level"] == pytest.approx(expected, 0.001)
 
+    @staticmethod
+    def test_t_solve_n_two_sided() -> None:
+        # Regression: solving for n with a two-sided alternative used to crash
+        # because scipy's noncentral-t returns NaN for the (negligible) wrong-tail
+        # term at large n, which the brentq [2, 1e9] bracket walks into.
+        # pwr.t.test(d=0.5, power=0.8, sig.level=0.05, type="two.sample") -> n = 63.76561
+        two_sample = pwr_tests.pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="two-sample", print_pretty=False)
+        assert two_sample["n"] == 64
+        # pwr.t.test(d=0.5, power=0.8, sig.level=0.05, type="one.sample") -> n = 33.36713
+        one_sample = pwr_tests.pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="one-sample", print_pretty=False)
+        assert one_sample["n"] == 34
+
+    @staticmethod
+    def test_t_power_large_n_is_finite() -> None:
+        # Regression: forward power at large n must not return NaN (the wrong-tail
+        # guard). At n=5000, d=0.5 the test is essentially certain to reject.
+        result = pwr_tests.pwr_t_test(n=5000, d=0.5, sig_level=0.05, test_type="two-sample", print_pretty=False)
+        assert math.isfinite(result["power"])
+        assert result["power"] == pytest.approx(1.0, abs=1e-9)
+
 
 class Test_T2N:
     @staticmethod
@@ -987,6 +1009,14 @@ class Test_T2N:
         #     alternative = greater
         expected = 0.2146133
         assert s_results["sig_level"] == pytest.approx(expected, 0.0001)
+
+    @staticmethod
+    def test_t2n_power_large_n_is_finite() -> None:
+        # Regression: same wrong-tail NaN guard as pwr_t, exercised via large
+        # group sizes (pwr_t2n takes n1/n2 directly rather than solving for them).
+        result = pwr_tests.pwr_t2n_test(n1=5000, n2=5000, d=0.5, sig_level=0.05, print_pretty=False)
+        assert math.isfinite(result["power"])
+        assert result["power"] == pytest.approx(1.0, abs=1e-9)
 
 
 if __name__ == "__main__":
