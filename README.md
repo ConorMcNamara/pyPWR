@@ -21,6 +21,7 @@ Despite the proliferation of A/B testing and experimental design in data science
 - ✅ **Validated Results**: Unit tests ensure compatibility with R's pwr library (differences < 1e-03)
 - 🐍 **Pythonic API**: Clean, modern Python 3.13+ codebase with type hints and comprehensive documentation
 - 🚀 **High Performance**: Leverages NumPy and SciPy for efficient numerical computations
+- 📈 **Interactive Plots**: Optional Plotly power-versus-sample-size curves (a port of R pwr's `plot.power.htest`)
 
 ## Table of Contents
 
@@ -50,11 +51,20 @@ cd pyPWR
 pip install -e .
 ```
 
+### Optional: plotting support
+
+Power-curve plotting requires Plotly, which is an optional extra:
+
+```bash
+pip install "pwr-py[plot]"
+```
+
 ### Requirements
 
 - Python 3.13 or higher
 - NumPy >= 2.2.4
 - SciPy >= 1.15.2
+- Plotly >= 5.0.0 (optional, for `plot_power`)
 
 ## Quick Start
 
@@ -187,6 +197,22 @@ result = pwr_t_test(d=effect["effect_size"], n=30, sig_level=0.05, type="paired"
 
 print(f"Power with n=30 and d=0.5: {result['power']:.2%}")
 ```
+
+### Example 6: Plotting Power vs. Sample Size
+
+Requires the `plot` extra (`pip install "pwr-py[plot]"`). Pass any `pwr_*_test`
+result to `plot_power` to get an interactive Plotly figure of power as a
+function of sample size, with the solved sample size marked:
+
+```python
+from PyPWR import pwr_t_test, plot_power
+
+result = pwr_t_test(n=64, d=0.5, sig_level=0.05, test_type="two-sample")
+fig = plot_power(result)
+fig.show()  # opens an interactive figure; also fig.write_html("power.html")
+```
+
+The `pwr_f2_test` result is not plottable (it has no single sample-size axis).
 
 ## Effect Size Calculations
 

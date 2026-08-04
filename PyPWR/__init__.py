@@ -12,6 +12,7 @@ from PyPWR.effect_size import (
     es_w1,
     es_w2,
 )
+from PyPWR.plot import plot_power, power_curve
 from PyPWR.pwr_tests import (
     pwr_2p2n_test,
     pwr_2p_test,
@@ -33,6 +34,9 @@ __all__ = [
     "es_h",
     "es_w1",
     "es_w2",
+    # Plotting functions
+    "plot_power",
+    "power_curve",
     "pwr_2p2n_test",
     # Power test functions
     "pwr_2p_test",
