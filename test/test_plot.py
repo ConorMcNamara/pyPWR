@@ -22,8 +22,8 @@ from PyPWR import (
 
 # One representative result per plottable test kind, each solved for sample size.
 _SINGLE_N_RESULTS = [
-    pwr_t_test(n=64, d=0.5, sig_level=0.05, test_type="two-sample", print_pretty=False),
-    pwr_t_test(n=34, d=0.5, sig_level=0.05, test_type="one-sample", print_pretty=False),
+    pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="two-sample", print_pretty=False),
+    pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="one-sample", print_pretty=False),
     pwr_2p_test(h=0.3, power=0.8, sig_level=0.05, print_pretty=False),
     pwr_p_test(h=0.3, power=0.8, sig_level=0.05, print_pretty=False),
     pwr_r_test(r=0.3, power=0.8, sig_level=0.05, print_pretty=False),
@@ -66,7 +66,7 @@ class TestPowerCurve:
 
     def test_power_increases_with_sample_size(self):
         # Power is monotonically non-decreasing in n for a fixed effect/alpha.
-        curve = power_curve(pwr_t_test(n=64, d=0.5, sig_level=0.05, test_type="two-sample", print_pretty=False))
+        curve = power_curve(pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="two-sample", print_pretty=False))
         powers = [p for p in curve.powers if not math.isnan(p)]
         assert all(b >= a - 1e-9 for a, b in pairwise(powers))
 
@@ -92,7 +92,7 @@ class TestPlotPower:
 
     def test_returns_figure(self):
         go = pytest.importorskip("plotly.graph_objects")
-        result = pwr_t_test(n=64, d=0.5, sig_level=0.05, test_type="two-sample", print_pretty=False)
+        result = pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="two-sample", print_pretty=False)
         fig = plot_power(result)
         assert isinstance(fig, go.Figure)
 

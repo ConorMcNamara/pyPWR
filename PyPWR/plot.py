@@ -291,7 +291,7 @@ def plot_power(
     Examples
     --------
     >>> from PyPWR import pwr_t_test, plot_power
-    >>> result = pwr_t_test(n=64, d=0.5, sig_level=0.05, test_type="two-sample")
+    >>> result = pwr_t_test(d=0.5, power=0.8, sig_level=0.05, test_type="two-sample")
     >>> fig = plot_power(result)  # doctest: +SKIP
     >>> fig.show()  # doctest: +SKIP
     """
