@@ -40,7 +40,7 @@ Despite the proliferation of A/B testing and experimental design in data science
 ### From PyPI (when available)
 
 ```bash
-pip install pypwr
+pip install pwr-py
 ```
 
 ### From Source
@@ -328,7 +328,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 ```bash
 git clone https://github.com/ConorMcNamara/pyPWR.git
 cd pyPWR
-pip install -e ".[dev]"  # Install with development dependencies
+uv sync  # Install with development dependencies
 ```
 
 ### Running Tests
