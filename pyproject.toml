@@ -45,7 +45,7 @@ plot = [
 
 [dependency-groups]
 dev = [
-    "pytest>=8.3.5",
+    "pytest>=9.0.3",
     "pytest-cov>=6.0.0",
     "ruff>=0.8.0",
     "zuban>=0.1.0",
