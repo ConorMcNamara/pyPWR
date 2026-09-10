@@ -690,7 +690,7 @@ def pwr_t_test(
     d: float | None = None,
     sig_level: float | None = None,
     power: float | None = None,
-    test_type: str = "paired",
+    test_type: str = "two-sample",
     alternative: str = "two-sided",
     print_pretty: bool = True,
 ) -> dict[str, int | float | str | None]:
