@@ -779,6 +779,22 @@ class Test_R:
         expected = 0.009736855
         assert s_result["sig_level"] == pytest.approx(expected, abs=0.0001)
 
+    @staticmethod
+    def test_r_less_power() -> None:
+        # Power with r=-0.3, alternative="less" equals r=0.3, alternative="greater" by symmetry.
+        less = pwr_tests.pwr_r_test(r=-0.3, n=50, sig_level=0.05, alternative="less", print_pretty=False)
+        greater = pwr_tests.pwr_r_test(r=0.3, n=50, sig_level=0.05, alternative="greater", print_pretty=False)
+        assert less["power"] == pytest.approx(greater["power"], abs=1e-10)
+        assert less["effect_size"] == -0.3
+
+    @staticmethod
+    def test_r_less_n() -> None:
+        # Solving n with r=-0.3, alternative="less" equals r=0.3, alternative="greater" by symmetry.
+        less = pwr_tests.pwr_r_test(r=-0.3, power=0.80, sig_level=0.05, alternative="less", print_pretty=False)
+        greater = pwr_tests.pwr_r_test(r=0.3, power=0.80, sig_level=0.05, alternative="greater", print_pretty=False)
+        assert less["n"] == greater["n"]
+        assert less["effect_size"] == -0.3
+
 
 class Test_T:
     @staticmethod

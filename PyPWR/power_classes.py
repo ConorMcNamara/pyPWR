@@ -212,9 +212,9 @@ class pwr_2n(abc.ABC):
             else:
                 self.effect_size = brentq(self._get_effect_size, -10, 5)
         elif self.n1 is None:
-            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
+            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 1e09))
         elif self.n2 is None:
-            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 500))
+            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 1e09))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
         if self.note is not None:
@@ -937,12 +937,11 @@ class pwr_r(pwr_1n):
 
     def _get_power(self) -> float:
         assert self.sig_level is not None and self.n is not None and self.effect_size is not None
-        if self.alternative == "less":
-            self.effect_size *= -1
+        r = -self.effect_size if self.alternative == "less" else self.effect_size
         sig_level = self.sig_level / 2 if self.alternative == "two-sided" else self.sig_level
         ttt = t_dist.isf(sig_level, df=self.n - 2)
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
-        zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
+        zr = atanh(r) + r / (2 * (self.n - 1))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
             power = norm.cdf((zr - zrc) * sqrt(self.n - 3)) + norm.cdf((-zr - zrc) * sqrt(self.n - 3))
@@ -952,11 +951,10 @@ class pwr_r(pwr_1n):
 
     def _get_effect_size(self, effect_size: float) -> float:
         assert self.sig_level is not None and self.n is not None and self.power is not None
-        if self.alternative == "less":
-            effect_size *= -1
+        r = -effect_size if self.alternative == "less" else effect_size
         sig_level = self.sig_level / 2 if self.alternative == "two-sided" else self.sig_level
         ttt = t_dist.isf(sig_level, df=self.n - 2)
-        zr = atanh(effect_size) + effect_size / (2 * (self.n - 1))
+        zr = atanh(r) + r / (2 * (self.n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
@@ -969,11 +967,10 @@ class pwr_r(pwr_1n):
 
     def _get_n(self, n: int) -> float:
         assert self.sig_level is not None and self.effect_size is not None and self.power is not None
-        if self.alternative == "less":
-            self.effect_size *= -1
+        r = -self.effect_size if self.alternative == "less" else self.effect_size
         sig_level = self.sig_level / 2 if self.alternative == "two-sided" else self.sig_level
         ttt = t_dist.isf(sig_level, df=n - 2)
-        zr = atanh(self.effect_size) + self.effect_size / (2 * (n - 1))
+        zr = atanh(r) + r / (2 * (n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + n - 2))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
@@ -984,12 +981,11 @@ class pwr_r(pwr_1n):
 
     def _get_sig_level(self, sig_level: float) -> float:
         assert self.n is not None and self.effect_size is not None and self.power is not None
-        if self.alternative == "less":
-            self.effect_size *= -1
+        r = -self.effect_size if self.alternative == "less" else self.effect_size
         if self.alternative == "two-sided":
             sig_level /= 2
         ttt = t_dist.isf(sig_level, df=self.n - 2)
-        zr = atanh(self.effect_size) + self.effect_size / (2 * (self.n - 1))
+        zr = atanh(r) + r / (2 * (self.n - 1))
         rc = sqrt(pow(ttt, 2) / (pow(ttt, 2) + self.n - 2))
         zrc = atanh(rc)
         if self.alternative == "two-sided":
@@ -1243,9 +1239,9 @@ class pwr_t2n(pwr_2n):
             else:
                 self.effect_size = brentq(self._get_effect_size, -10, 1)
         elif self.n1 is None:
-            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 500))
+            self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 1e09))
         elif self.n2 is None:
-            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 500))
+            self.n2 = np.ceil(brentq(self._get_n2, 2 + 1e-10, 1e09))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
         if self.note is not None:
