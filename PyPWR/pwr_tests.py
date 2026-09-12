@@ -709,7 +709,7 @@ def pwr_t_test(
         Significance level (Type I error probability). Must be between 0 and 1
     power : float | None, default=None
         Power of test (1 minus Type II error probability). Must be between 0 and 1
-    test_type : {'two-sample', 'one-sample', 'paired'}, default='paired'
+    test_type : {'two-sample', 'one-sample', 'paired'}, default='two-sample'
         Type of t-test
     alternative : {'two-sided', 'greater', 'less'}, default='two-sided'
         The alternative hypothesis
@@ -738,6 +738,9 @@ def pwr_t_test(
         raise ValueError("sig_level must be between 0 and 1")
     if power is not None and (power < 0 or power > 1):
         raise ValueError("power must be between 0 and 1")
+    alternative = alternative.casefold()
+    if alternative == "two-sided" and d is not None:
+        d = abs(d)
     pwr = pwr_t(n, d, sig_level, power, test_type, alternative).pwr_test()
     if print_pretty:
         if "note" in pwr:
