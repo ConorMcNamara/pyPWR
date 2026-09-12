@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-11
+
+### Fixed
+- `pwr_t_test` now applies `abs(d)` for `alternative="two-sided"`, matching R's `pwr.t.test` and all other directional tests in the library
+- Fixed `pwr_t_test` docstring incorrectly listing `test_type` default as `'paired'` instead of `'two-sample'`
+- Widened `pwr_t2n` effect-size search bounds from `[-1, 10]`/`[-10, 1]` to `[-5, 10]`/`[-10, 5]`, matching `pwr_t` and `pwr_1n`
+- Extended NaN guards in `pwr_t` and `pwr_t2n` power functions to cover all tail computations, not just the two-sided wrong-tail term
+- Aligned `pwr_t` two-sided effect-size lower search bound (`1e-10`) with all other tests
+- `pwr_norm` and `pwr_p` can now solve for `n` down to 1, matching their input validation (previously inherited a lower bound of 2 from the base class)
+- Plot `_axis()` now adapts its x-axis lower bound to `max(2, min(n/2, 10))` so the optimal sample size marker remains visible for small n values
+
 ### Added
 - CONTRIBUTING.md with comprehensive contribution guidelines
 - CHANGELOG.md to track project changes
@@ -67,5 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - README with detailed API documentation and examples
 
-[Unreleased]: https://github.com/ConorMcNamara/pyPWR/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ConorMcNamara/pyPWR/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/ConorMcNamara/pyPWR/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/ConorMcNamara/pyPWR/releases/tag/v0.1.0

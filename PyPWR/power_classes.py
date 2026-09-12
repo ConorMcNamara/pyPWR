@@ -22,6 +22,8 @@ class pwr_1n(abc.ABC):
     that involve a single sample size (or equal sample sizes per group).
     """
 
+    _n_min: int = 2
+
     def __init__(
         self,
         effect_size: float | None,
@@ -97,7 +99,7 @@ class pwr_1n(abc.ABC):
             else:
                 self.effect_size = brentq(self._get_effect_size, -10, 5)
         elif self.n is None:
-            self.n = np.ceil(brentq(self._get_n, 2 + 1e-10, 1e09))
+            self.n = np.ceil(brentq(self._get_n, self._n_min + 1e-10, 1e09))
         else:
             self.sig_level = brentq(self._get_sig_level, 1e-10, 1 - 1e-10)
         if self.note is not None:
@@ -784,6 +786,8 @@ class pwr_norm(pwr_1n):
     when the variance is known.
     """
 
+    _n_min: int = 1
+
     def __init__(
         self,
         d: float | None,
@@ -1074,19 +1078,23 @@ class pwr_t:
         ncp = sqrt(n / self.t_sample) * d
         if self.alternative == "two-sided":
             qu = t_dist.isf(sig_level / 2, nu)
-            # Probability of rejecting in the wrong tail. For a large effect size
-            # or large df this underflows to ~0, but scipy's noncentral-t can
-            # return NaN here instead of 0, which would break the root-finders in
-            # pwr_test (e.g. solving for n over the wide [2, 1e9] bracket). Treat a
-            # NaN as the 0 it is converging to.
+            # Guard both tails: scipy's noncentral-t can return NaN where
+            # these probabilities underflow to ~0 at extreme ncp values.
+            right_tail = nct.sf(qu, nu, ncp)
+            if np.isnan(right_tail):
+                right_tail = 0.0
             wrong_tail = nct.cdf(-qu, nu, ncp)
             if np.isnan(wrong_tail):
                 wrong_tail = 0.0
-            power = nct.sf(qu, nu, ncp) + wrong_tail
+            power = right_tail + wrong_tail
         elif self.alternative == "greater":
             power = nct.sf(t_dist.isf(sig_level, nu), nu, ncp)
+            if np.isnan(power):
+                power = 0.0
         else:
             power = nct.cdf(t_dist.ppf(sig_level, nu), nu, ncp)
+            if np.isnan(power):
+                power = 0.0
         return float(power)
 
     def _get_power(self) -> float:
@@ -1111,7 +1119,7 @@ class pwr_t:
             self.power = self._get_power()
         elif self.d is None:
             if self.alternative == "two-sided":
-                self.d = brentq(self._get_effect_size, 1e-07, 10)
+                self.d = brentq(self._get_effect_size, 1e-10, 10)
             elif self.alternative == "greater":
                 self.d = brentq(self._get_effect_size, -5, 10)
             else:
@@ -1183,16 +1191,23 @@ class pwr_t2n(pwr_2n):
         ncp = effect_size * (1 / sqrt(1 / n1 + 1 / n2))
         if self.alternative == "two-sided":
             qu = t_dist.isf(sig_level / 2, nu)
-            # As in pwr_t._power, guard the wrong-tail term: scipy's noncentral-t
-            # can return NaN where this probability underflows to ~0.
+            # Guard both tails: scipy's noncentral-t can return NaN where
+            # these probabilities underflow to ~0 at extreme ncp values.
+            right_tail = nct.sf(qu, nu, ncp)
+            if np.isnan(right_tail):
+                right_tail = 0.0
             wrong_tail = nct.cdf(-qu, nu, ncp)
             if np.isnan(wrong_tail):
                 wrong_tail = 0.0
-            power = nct.sf(qu, nu, ncp) + wrong_tail
+            power = right_tail + wrong_tail
         elif self.alternative == "greater":
             power = nct.sf(t_dist.isf(sig_level, nu), nu, ncp)
+            if np.isnan(power):
+                power = 0.0
         else:
             power = nct.cdf(t_dist.ppf(sig_level, nu), nu, ncp)
+            if np.isnan(power):
+                power = 0.0
         return float(power)
 
     def _get_power(self) -> float:
@@ -1235,9 +1250,9 @@ class pwr_t2n(pwr_2n):
             if self.alternative == "two-sided":
                 self.effect_size = brentq(self._get_effect_size, 1e-10, 10)
             elif self.alternative == "greater":
-                self.effect_size = brentq(self._get_effect_size, -1, 10)
+                self.effect_size = brentq(self._get_effect_size, -5, 10)
             else:
-                self.effect_size = brentq(self._get_effect_size, -10, 1)
+                self.effect_size = brentq(self._get_effect_size, -10, 5)
         elif self.n1 is None:
             self.n1 = np.ceil(brentq(self._get_n1, 2 + 1e-10, 1e09))
         elif self.n2 is None:

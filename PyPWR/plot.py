@@ -154,10 +154,11 @@ def _t_type(method: str) -> str:
 
 
 def _axis(n_total: float) -> tuple[list[float], float]:
-    """Build the sample-size sweep from 10 to ``max(n*1.5, n+30)``."""
+    """Build the sample-size sweep from ``min(n/2, 2)`` to ``max(n*1.5, n+30)``."""
+    n_lower = max(2, min(n_total / 2, 10))
     n_upper = max(n_total * 1.5, n_total + 30)
-    step = (n_upper - 10) / _BREAKS
-    sizes = [10 + i * step for i in range(_BREAKS + 1)]
+    step = (n_upper - n_lower) / _BREAKS
+    sizes = [n_lower + i * step for i in range(_BREAKS + 1)]
     return sizes, step
 
 
